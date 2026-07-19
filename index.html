@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lençóis × Jeri — Controle da viagem</title>
+    <meta
+      name="description"
+      content="Dashboard de controle da viagem: POA → Lençóis Maranhenses → Jericoacoara → Fortaleza."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div class="hero__media" aria-hidden="true"></div>
+        <div class="hero__content">
+          <h1 class="hero__brand">
+            Lençóis
+            <span>× Jeri</span>
+          </h1>
+          <p class="hero__lead">
+            Controle da viagem — travessia de 4 dias nos Lençóis, Rota das Emoções
+            e volta por Fortaleza em 13/08/2026.
+          </p>
+          <div class="hero__meta">
+            <span class="chip chip--solid">Volta fixa 13/08 · 12:50</span>
+            <span class="chip">Azul · Fortaleza → POA</span>
+            <span class="chip">Teto R$ 6.000 / pessoa</span>
+            <span class="chip">Volta já paga</span>
+          </div>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#painel">Montar cenário</a>
+            <a class="btn btn--ghost" href="#conteudo">Ver roteiro</a>
+          </div>
+          <div class="route-rail">
+            <b>POA</b><span class="dot"></span><b>SLZ</b><span class="dot"></span
+            ><b>Travessia</b><span class="dot"></span><b>Jeri</b><span class="dot"></span
+            ><b>FOR</b><span class="dot"></span><b>POA</b>
+          </div>
+        </div>
+      </header>
+
+      <main class="wrap panel" id="painel">
+        <div class="alert alert--warn">
+          <strong>Âncora crítica: voo Fortaleza 12:50</strong>
+          Transfer compartilhado Jeri→FOR sai ~10h30 e chega ~18h — não serve. No dia
+          13: privativo saindo ~4h–5h30, ou (recomendado) pernoitar em Fortaleza em
+          12/08.
+        </div>
+
+        <div class="controls" id="controls">
+          <div class="field">
+            <label for="scenario">Cenário de gasto</label>
+            <select id="scenario">
+              <option value="enxuto">Enxuto — cabe folgado</option>
+              <option value="equilibrado" selected>Equilibrado — melhor fit</option>
+              <option value="confortavel">Confortável — risco de estourar</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tripDays">Duração total</label>
+            <select id="tripDays">
+              <option value="10">10 dias (04–13/08) — apertado</option>
+              <option value="12" selected>12 dias (02–13/08) — recomendado</option>
+              <option value="14">14 dias (31/07–13/08) — + Delta</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="jeriNights">Noites em Jericoacoara</label>
+            <select id="jeriNights">
+              <option value="0">Pular Jeri</option>
+              <option value="2">2 noites — Jeri curta</option>
+              <option value="3" selected>3 noites — equilíbrio</option>
+              <option value="4">4 noites — Jeri cheia</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="trekMode">Pacote da travessia</label>
+            <select id="trekMode">
+              <option value="cotacao" selected>Cotação guia — R$ 2.100</option>
+              <option value="grupo_barato">Grupo econômico ~R$ 1.580</option>
+              <option value="completo">Pacote completo ~R$ 3.700</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+        <div class="usage" id="usage"></div>
+
+        <nav class="tabs" id="tabs" aria-label="Seções do dashboard"></nav>
+
+        <div id="conteudo"></div>
+
+        <div class="footer-bar">
+          <div id="footerStatus"></div>
+          <button type="button" class="btn btn--soft btn--sm" id="resetBtn">
+            Reset recomendado
+          </button>
+        </div>
+      </main>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
