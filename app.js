@@ -189,6 +189,156 @@
       links: [],
       tips: "Não paguem TTS em camelô/guia de rua. Guarde o comprovante.",
     },
+    {
+      id: "rtur",
+      name: "RTUR Viagens Turismo — SA ↔ Jeri direto",
+      category: "Santo Amaro → Jeri",
+      what: "Transfer direto Santo Amaro ↔ Jericoacoara via asfalto (~520 km, ~9h + almoço em Parnaíba). Busca/deixa na pousada. Compartilhado ou privativo.",
+      price: "Compartilhado R$ 750/pess. · Privativo pick-up até 4: R$ 2.500/carro · SW4 até 6: R$ 3.000/carro",
+      contact: "WhatsApp +55 98 98885-5977 · contato@rturviagensturismo.net.br · Av. Rodoviária, Boa Fé, Barreirinhas-MA",
+      links: [
+        {
+          label: "SA ↔ Jeri",
+          href: "https://rturviagensturismo.net.br/produto/transfer-santo-amaro-jeri-ou-jeri-santo-amaro/",
+        },
+        { label: "Site", href: "https://rturviagensturismo.net.br/" },
+      ],
+      tips: "Pagamento típico 50% na reserva + 50% no embarque. Perguntem em quais dias o COMPARTILHADO sai — não assumam todos os dias. Para o casal, privativo R$ 2.500 = R$ 1.250/pess. (mais caro que a cadeia Rota Combo).",
+    },
+    {
+      id: "rotacombo_sa_phb",
+      name: "Rota Combo — Santo Amaro → Parnaíba",
+      category: "Santo Amaro → Jeri (etapa 1)",
+      what: "Compartilhado em 3 etapas: jardineira SA→estacionamento → BRR → veículo AC até Parnaíba. Malha terça, quinta e sábado ~7h–7h30.",
+      price: "Compartilhado R$ 470/pess. · Privativo até 3: ~R$ 1.643–1.860/carro",
+      contact: "0800 717 7701 · (86) 3323-9888 · WA +55 86 99993-0111 · Parnaíba: Av. Pres. Vargas 37",
+      links: [
+        {
+          label: "SA→Parnaíba compartilhado",
+          href: "https://rotacombo.com/passeio/transfer-santo-amaro-parnaiba-compartilhado/",
+        },
+        {
+          label: "SA→Parnaíba privativo",
+          href: "https://rotacombo.com/passeio/transfer-santo-amaro-parnaiba-privativo/",
+        },
+      ],
+      tips: "Chegam Parnaíba ~11h30–12h. No mesmo dia (ter/qui/sáb) pega PHB→Jeri 13h30–14h30. Essa é a melhor cadeia compartilhada saindo DE Santo Amaro.",
+    },
+    {
+      id: "rotacombo_phb_jeri",
+      name: "Rota Combo — Parnaíba → Jericoacoara",
+      category: "Santo Amaro → Jeri (etapa 2)",
+      what: "Estrada até Jijoca + jardineira até a vila (~4h). Seg–sáb. Ter/qui/sáb à tarde (encaixa com SA→PHB manhã). Seg/qua/sex de manhã COM parada Lagoa do Paraíso.",
+      price: "Compartilhado R$ 170/pess. · Privativo estrada até 3: ~R$ 1.215/carro",
+      contact: "Mesmos canais Rota Combo · WA Jeri (88) 99602-9264",
+      links: [
+        {
+          label: "PHB ↔ Jeri",
+          href: "https://rotacombo.com/passeio/transfers-parnaiba-jericoacoara-ou-jericoacoara-parnaiba/",
+        },
+        { label: "Contato", href: "https://rotacombo.com/contato/" },
+      ],
+      tips: "Ter/qui/sáb: saída PHB 13:30–14:30 SEM Paraíso (pode esperar 30–60 min no estacionamento de Jeri). Ideal após chegar de Santo Amaro de manhã.",
+    },
+    {
+      id: "mdm_sa_brr",
+      name: "MDM Turismo — Santo Amaro → Barreirinhas",
+      category: "Santo Amaro → Barreirinhas",
+      what: "Compartilhado climatizado ~2h. Embarque pousadas centro SA. Seg–sex ~05:30. NÃO roda sábado/domingo no compartilhado.",
+      price: "Compartilhado R$ 150/pess. · Privativo sedan até 4: R$ 850/carro",
+      contact: "(98) 3235-3490 · mdmturismo.com.br · Instagram @mdm_turismo · Av. Castelo Branco 148, São Luís",
+      links: [
+        {
+          label: "SA → BRR",
+          href: "https://mdmturismo.com.br/transfer-lencois-maranhenses-santo-amaro-barreirinhas",
+        },
+        { label: "Transfers regulares", href: "https://mdmturismo.com.br/transfers-regulares" },
+      ],
+      tips: "Útil se terminarem a trilha na SEXTA e dormirem em SA: sábado o compartilhado MDM NÃO sai. Para pegar Rota Combo BRR→Jeri sábado ~9h, precisam estar em BRR na SEXTA à noite (privativo sexta à tarde) ou usar cadeia SA→PHB→Jeri no sábado.",
+    },
+    {
+      id: "mdm_sa_slz",
+      name: "MDM Turismo — Santo Amaro → São Luís",
+      category: "Santo Amaro → São Luís",
+      what: "Compartilhado SA→SLZ ~5h, seg–sáb. NÃO é caminho natural para Jeri (volta para trás).",
+      price: "~R$ 160/pess. compartilhado",
+      contact: "(98) 3235-3490 · mdmturismo.com.br",
+      links: [
+        { label: "Transfers Santo Amaro", href: "https://mdmturismo.com.br/transfer-santo-amaro" },
+      ],
+      tips: "Só faz sentido se cancelarem Jeri e voarem de SLZ, ou precisarem hospital/aeroporto. Para Jeri, é desvio caro em tempo.",
+    },
+    {
+      id: "delterra",
+      name: "Delterra — SA ↔ BRR / Rota das Emoções",
+      category: "Santo Amaro → Barreirinhas",
+      what: "Transfer SA↔BRR: compartilhado SA→BRR ~05:30 · BRR→SA ~12:30. Também opera trechos SLZ, Parnaíba, Jeri, Fortaleza (consultar data).",
+      price: "Sob consulta no site por data · SLZ↔SA a partir ~R$ 180–190/pess.",
+      contact: "WhatsApp pelo site delterra.com.br (confirmar número na reserva)",
+      links: [
+        {
+          label: "SA ↔ BRR",
+          href: "https://delterra.com.br/transfer-sao-luis-santo-amaro-16792",
+        },
+        { label: "SLZ ↔ SA", href: "https://delterra.com.br/transfer-sao-luis-santo-amaro" },
+      ],
+      tips: "Boa para cotar quando MDM estiver lotado. Sempre confirmem se o horário 05:30 roda no sábado da viagem de vocês.",
+    },
+    {
+      id: "giconect",
+      name: "G.i Conect Viagens — BRR → Jeri / Lençóis",
+      category: "Barreirinhas → Jeri",
+      what: "Compartilhado BRR→Jeri ~R$ 650/pess. ~7h saída ~07h (periodicidade sob consulta). Privativo via praias ~R$ 2.000/carro. Também SLZ↔SA privativo ~R$ 900/carro.",
+      price: "BRR→Jeri compartilhado ~R$ 650/pess. · Privativo praias ~R$ 2.000/carro (até 4)",
+      contact: "WhatsApp +55 98 3042-1993 · giconect.com.br",
+      links: [
+        {
+          label: "BRR → Jeri",
+          href: "https://giconect.com.br/transporte-de-barreirinhas-para-jericoacoara",
+        },
+        { label: "Santo Amaro", href: "https://giconect.com.br/santo-amaro" },
+      ],
+      tips: "Preço compartilhado costuma ser MAIS alto que Rota Combo (~R$ 460–495). Cotem os dois no mesmo dia.",
+    },
+    {
+      id: "agencia_sa",
+      name: "Agência Santo Amaro Lençóis — transfers locais",
+      category: "Santo Amaro local",
+      what: "Privativos SA↔SLZ R$ 1.300/carro (até 4) · coletivo SLZ↔SA R$ 350/pess. · SA↔BRR privativo R$ 700/carro.",
+      price: "SA↔BRR privativo R$ 700/carro (= R$ 350/pess. casal) · SLZ coletivo R$ 350/pess.",
+      contact: "WhatsApp +55 98 99225-4591 · santoamarolencois.online",
+      links: [
+        { label: "Transfers", href: "https://santoamarolencois.online/transfer.html" },
+      ],
+      tips: "Útil para privativo curto SA→BRR na sexta à tarde se quiserem dormir em Barreirinhas e pegar Rota Combo sábado.",
+    },
+    {
+      id: "trilha_tour",
+      name: "Trilha Tour — SA → Barreirinhas",
+      category: "Santo Amaro → Barreirinhas",
+      what: "Transfer climatizado SA→BRR ~1h30 · busca na pousada.",
+      price: "A partir de ~R$ 450 (conferir se é por carro ou pessoa no ato)",
+      contact: "trilhatour.com.br · Barreirinhas",
+      links: [
+        {
+          label: "SA → BRR",
+          href: "https://trilhatour.com.br/transfer-santo-amaro-a-barreirinhas-3484",
+        },
+      ],
+      tips: "Cotar junto com MDM/Agência SA — preços de privativo curto variam muito.",
+    },
+    {
+      id: "rota_emocoes_br",
+      name: "Rota das Emoções Brasil — orçamentos SA/BRR",
+      category: "Rota das Emoções",
+      what: "Portal que orça BRR↔SA (~2h), SLZ↔SA, Jeri↔BRR. Muitos trechos só sob consulta (não compra online).",
+      price: "Sob orçamento",
+      contact: "Pelo site rotadasemocoesbrasil.com.br",
+      links: [
+        { label: "Transfers", href: "https://www.rotadasemocoesbrasil.com.br/transfers/" },
+      ],
+      tips: "Bom para pedir cotação comparativa; confirmem operador real que vai executar.",
+    },
   ];
 
   /**
@@ -534,6 +684,7 @@
 
   const TABS = [
     { id: "visao", label: "Visão geral" },
+    { id: "sa_jeri", label: "SA → Jeri ★" },
     { id: "planos", label: "Dois planos" },
     { id: "dias", label: "Dia a dia" },
     { id: "travessia", label: "Travessia" },
@@ -593,7 +744,7 @@
     plan: saved?.plan || "atins",
     jeriNights: String(saved?.jeriNights ?? "3"),
     trekMode: saved?.trekMode || "cotacao",
-    tab: saved?.tab || "visao",
+    tab: saved?.tab || "sa_jeri",
     notes: saved?.notes || "",
     tasks: { ...DEFAULT_TASKS, ...(saved?.tasks || {}) },
     lines: saved?.lines || null,
@@ -1128,6 +1279,172 @@
       </section>`;
   }
 
+  function sectionSaJeri() {
+    return `
+      <section class="section is-active">
+        <h2>Santo Amaro → Jericoacoara — o trecho que mais importa dominar</h2>
+        <p class="lede">Não existe ônibus de linha barato e diário SA→Jeri. Vocês montam uma <b>cadeia de transfers</b> com malha semanal. Abaixo: todas as rotas, restrições de dia/hora, ranking do mais barato e fornecedores com preço/contato.</p>
+
+        ${explain(
+          "Mapa mental em 30 segundos",
+          " Santo Amaro é um beco logístico charmoso: para leste (Jeri) vocês precisam atravessar ~500 km via Barreirinhas e/ou Parnaíba. <b>Compartilhados bons só em dias certos e de manhã cedo.</b> Se a trilha termina no sábado à tarde, a janela da manhã já fechou — aí é privativo ou dormir e sair no próximo dia de malha (terça)."
+        )}
+
+        <h3>1. Ranking — do mais barato ao mais caro (por pessoa, casal)</h3>
+        ${table(
+          ["#", "Rota", "≈ R$/pessoa", "Dias que roda", "Duração", "Quando serve no vosso calendário"],
+          [
+            ["1★", "SA → BRR (sexta priv./tarde) + BRR → Jeri Rota Combo", "R$ 480–850", "BRR→Jeri: ter/qui/sáb ~9–10h", "~2h + ~7h30", "Plano B: terminar trek SEX 07, dormir BRR, sair SÁB 08"],
+            ["2★", "SA → Parnaíba + Parnaíba → Jeri (Rota Combo)", "R$ 640 (470+170)", "Ter / qui / sáb", "~9–11h no dia", "Plano B: dormir SA sex 07, sair SÁB 08 ~7h → PHB → Jeri 13h30"],
+            ["3", "RTUR SA → Jeri compartilhado direto", "R$ 750", "Sob consulta (perguntar dias)", "~9h + almoço", "Se houver vaga no dia certo — cotar"],
+            ["4", "G.i Conect BRR → Jeri compartilhado", "R$ 650 (+ custo SA→BRR)", "Sob consulta", "~7h", "Alternativa à Rota Combo; costuma ser mais caro"],
+            ["5", "RTUR / Rota Combo privativo SA → Jeri", "R$ 930–1.250", "Qualquer dia", "~9h", "Plano A (fim sáb 08) ou domingo 09 — flexível"],
+            ["6", "SA → SLZ + depois tentar Jeri/FOR", "R$ 160+ e 1 dia perdido", "Seg–sáb", "5h só até SLZ", "Evitar se o objetivo é Jeri"],
+          ],
+          { tones: ["ok", "ok", "info", "info", "warn", "alert"] }
+        )}
+
+        ${explain(
+          "Veredito para vocês",
+          state.plan === "direto"
+            ? " <b>Plano B (trilha até sex 07):</b> melhor custo = dormir sexta em Santo Amaro e no <b>sábado 08</b> pegar a cadeia <b>Rota Combo SA→Parnaíba (R$ 470) + Parnaíba→Jeri (R$ 170) = R$ 640</b>, OU pedir ao Walter deixar vocês em Barreirinhas sexta à tarde e pegar BRR→Jeri compartilhado ~R$ 460–495. A segunda opção pode ser a mais barata se o guia chegar a BRR."
+            : " <b>Plano A (trilha até sáb 08):</b> de manhã do sábado vocês ainda estão na areia — <b>não pegam</b> SA→PHB 7h nem BRR→Jeri 9h. Opções: (1) privativo sáb tarde/domingo ~R$ 930–1.250/pess.; (2) dormir SA sáb e sair <b>terça 11</b> na malha compartilhada (perdem Jeri); (3) negociar com Walter terminar mais cedo sexta (difícil em 4 dias completos)."
+        )}
+
+        <h3>2. Restrições duras de calendário (decorar)</h3>
+        ${table(
+          ["Trecho", "Dias", "Horário típico", "Não roda / pegadinha"],
+          [
+            ["Rota Combo BRR → Jeri (compartilhado)", "Terça, quinta, sábado", "~9h–10h · ~7h30", "Seg, qua, sex, dom — sem vaga regular"],
+            ["Rota Combo Jeri → BRR (sentido inverso)", "Segunda, quarta, sexta", "~8h45–9h45", "Não é o vosso sentido"],
+            ["Rota Combo SA → Parnaíba", "Terça, quinta, sábado", "~7h–7h30", "Chegada PHB ~meio-dia"],
+            ["Rota Combo Parnaíba → Jeri", "Seg–sáb", "Seg/qua/sex ~5h30–6h30 (c/ Paraíso) · Ter/qui/sáb ~13h30–14h30", "Ter/qui/sáb à tarde ENCAIXA com SA manhã"],
+            ["MDM SA → Barreirinhas", "Segunda a sexta", "~05:30", "Sábado e domingo: sem compartilhado"],
+            ["MDM / Rota Combo SA → São Luís", "Seg–sáb (varia)", "Manhã", "Direção ERRADA para Jeri"],
+            ["Privativos (RTUR, Rota Combo, G.i, Ag. SA)", "Todos os dias", "A combinar", "Pagam o privilégio do dia “errado”"],
+          ],
+          { tones: ["ok", "neutral", "ok", "ok", "warn", "alert", "info"] }
+        )}
+
+        <h3>3. Rota detalhada A — cadeia Rota Combo (melhor compartilhado saindo de SA)</h3>
+        <div class="day-card">
+          <h3>Manhã em Santo Amaro (ter / qui / sáb)</h3>
+          <p>Embarque na pousada ~6h45–7h. Jardineira até o estacionamento → Barreirinhas → van/micro até <b>Parnaíba</b>. Preço <b>R$ 470/pessoa</b>. Chegada estimada ~11h30–12h30.</p>
+        </div>
+        <div class="day-card">
+          <h3>Tarde em Parnaíba → Jeri (mesmo dia)</h3>
+          <p>Saída compartilhada <b>13h30–14h30</b> (ter/qui/sáb) · <b>R$ 170/pessoa</b> · ~4h · possível espera 30–60 min no estacionamento de Jeri antes da jardineira. Chegada vila fim de tarde/início da noite. <b>Almoço em Parnaíba por vossa conta</b> (janela ~1–2h).</p>
+        </div>
+        <div class="impact-box">
+          <strong>Total cadeia: ~R$ 640/pessoa · ~R$ 1.280 casal</strong>
+          <p style="margin:0.5rem 0 0">Contato único: Rota Combo · 0800 717 7701 · WA 86 99993-0111 · reservem OS DOIS trechos juntos e peçam “conexão SA→PHB→Jeri no mesmo dia”.</p>
+        </div>
+
+        <h3>4. Rota detalhada B — via Barreirinhas (pode ser a mais barata)</h3>
+        ${table(
+          ["Etapa", "Fornecedor", "Preço", "Horário / dias", "Nota"],
+          [
+            ["SA → BRR compartilhado", "MDM Turismo", "R$ 150/pess.", "Seg–sex ~05:30", "Cedo demais se a trilha termina no mesmo dia"],
+            ["SA → BRR privativo", "MDM R$ 850 · Ag. SA R$ 700 · Rota Combo a partir R$ 886/carro", "R$ 350–450/pess. (÷2)", "Qualquer dia / tarde", "Use na SEXTA à tarde (Plano B)"],
+            ["BRR → Jeri compartilhado", "Rota Combo", "R$ 460–495/pess.", "Ter/qui/sáb ~9–10h", "Âncora do Plano B sábado"],
+            ["BRR → Jeri compartilhado", "G.i Conect", "~R$ 650/pess.", "~07h · sob consulta", "Cotar; em geral mais caro"],
+            ["BRR → Jeri privativo", "Rota Combo / G.i / RTUR", "R$ 1.860–2.500/carro", "Diário", "Casal ≈ R$ 930–1.250/pess."],
+          ],
+          { aligns: ["left", "left", "right", "left", "left"] }
+        )}
+        ${explain(
+          "Pegadinha do sábado",
+          " O compartilhado MDM SA→BRR <b>não opera sábado</b>. Se terminarem a trilha sábado em SA, <b>não existe</b> combo barato SA→BRR 5h30 + BRR→Jeri 9h no mesmo dia. Ou privativo, ou cadeia via Parnaíba no <b>próximo</b> ter/qui/sáb (terça 11/08 no vosso caso)."
+        )}
+
+        <h3>5. Rota detalhada C — direto SA → Jeri (um carro / um ticket)</h3>
+        ${table(
+          ["Operador", "Tipo", "Preço", "Tempo", "Contato"],
+          [
+            ["RTUR", "Compartilhado", "R$ 750/pess.", "~9h + almoço PHB", "WA 98 98885-5977"],
+            ["RTUR", "Privativo pick-up ≤4", "R$ 2.500/carro (= R$ 1.250/pess.)", "~9h", "mesmo"],
+            ["RTUR", "Privativo SW4 ≤6", "R$ 3.000/carro", "~9h", "mesmo"],
+            ["Rota Combo", "Privativo BRR/SA→Jeri (consultar trecho SA)", "~R$ 1.860 até 3 pess. (= R$ 930/pess.)", "~7h30–9h", "WA 86 99993-0111"],
+          ],
+          { tones: ["info", "warn", "warn", "ok"] }
+        )}
+        <p class="muted">RTUR: 50% na reserva + 50% no embarque. Sempre perguntem <b>em quais dias</b> o compartilhado de R$ 750 sai — o site lista o preço, não a grade completa.</p>
+
+        <h3>6. Rota D — via São Luís (quase nunca vale)</h3>
+        <div class="grid-2">
+          <div class="block">
+            <div class="block__title">O que existe</div>
+            <ul>
+              <li>MDM SA→SLZ ~R$ 160 · ~5h · seg–sáb</li>
+              <li>Rota Combo SA↔SLZ compartilhado ~R$ 172 · privativo ~R$ 1.186 até 3</li>
+              <li>Ag. Santo Amaro coletivo SLZ ~R$ 350 / privativo R$ 1.300</li>
+              <li>Delterra SLZ↔SA a partir ~R$ 180–190</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block__title">Por que evitar para ir a Jeri</div>
+            <ul>
+              <li>São Luís fica a OESTE; Jeri a LESTE — vocês voltam</li>
+              <li>Depois ainda precisam SLZ→FOR (voo) ou ônibus longo + transfer Jeri</li>
+              <li>Come 1 dia inteiro e costuma sair mais caro que R$ 640–750</li>
+              <li>Só faz sentido se desistirem de Jeri ou precisarem do aeroporto SLZ</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>7. Como isso casa com os dois planos da viagem</h3>
+        <div class="compare-grid">
+          <div class="block">
+            <div class="block__title">Plano B — fim trek sexta 07/08</div>
+            <ol>
+              <li>Sex à tarde: chegar SA (ou pedir Walter ir até BRR)</li>
+              <li><b>Opção barata 1:</b> dormir SA → sáb 7h SA→PHB→Jeri (R$ 640)</li>
+              <li><b>Opção barata 2:</b> sex tarde privativo SA→BRR + sáb Rota Combo BRR→Jeri (~R$ 480 + trecho SA)</li>
+              <li>Chegada Jeri sábado à noite · 3+ noites úteis</li>
+            </ol>
+          </div>
+          <div class="block">
+            <div class="block__title">Plano A — fim trek sábado 08/08</div>
+            <ol>
+              <li>Sáb manhã: ainda na trilha — malha 7h/9h perdida</li>
+              <li><b>Recomendado:</b> privativo sáb tarde ou domingo SA/BRR→Jeri (~R$ 930–1.250)</li>
+              <li>Alternativa barata: dormir até terça 11 e compartilhado (mata Jeri)</li>
+              <li>RTUR compartilhado R$ 750 só se houver saída domingo/segunda — confirmar</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>8. Checklist de reserva deste trecho</h3>
+        <div class="tip-grid">
+          <div>Pedir ao Walter horário de chegada em SA no último dia</div>
+          <div>Reservar SA→Jeri <b>depois</b> de fechar a data do fim do trek</div>
+          <div>Na Rota Combo, comprar conexão no mesmo voucher quando possível</div>
+          <div>Limite de mala no compartilhado: ~55×35×25 cm — excedente paga</div>
+          <div>Almoço em Parnaíba: espécie/PIX · não incluso</div>
+          <div>TTS Jeri pagar no canal oficial na chegada</div>
+          <div>Cotar no mesmo dia: Rota Combo × RTUR × G.i Conect</div>
+          <div>Guardar WhatsApp do motorista na véspera</div>
+        </div>
+
+        <h3>9. Fornecedores deste trecho (resumo — cards completos na aba Fornecedores)</h3>
+        ${table(
+          ["Fornecedor", "Trecho forte", "Preço âncora", "WhatsApp / tel"],
+          [
+            ["Rota Combo", "SA→PHB, PHB→Jeri, BRR→Jeri", "R$ 170–495/pess.", "86 99993-0111 · 0800 717 7701"],
+            ["RTUR", "SA↔Jeri direto", "R$ 750 comp. / R$ 2.500 priv.", "98 98885-5977"],
+            ["MDM Turismo", "SA↔BRR, SA↔SLZ", "R$ 150 SA→BRR", "98 3235-3490"],
+            ["G.i Conect", "BRR→Jeri", "~R$ 650 comp.", "98 3042-1993"],
+            ["Agência Santo Amaro", "SA↔BRR privativo", "R$ 700/carro", "98 99225-4591"],
+            ["Delterra", "SA↔BRR / SLZ", "Sob data", "pelo site"],
+            ["Trilha Tour", "SA→BRR", "~R$ 450", "trilhatour.com.br"],
+          ]
+        )}
+
+        <p class="muted">Fontes consultadas jul/2026: sites Rota Combo, RTUR, MDM, G.i Conect, Delterra, Agência Santo Amaro. Preços e grades mudam — confirment no WhatsApp com a data exata (08 ou 09/08/2026).</p>
+        <p><a class="btn btn--soft btn--sm" href="#conteudo" data-tab-jump="fornecedores">Ver cards completos na aba Fornecedores</a></p>
+      </section>`;
+  }
+
   function sectionFornecedores() {
     const cards = SUPPLIERS.map((s) => {
       const links = (s.links || [])
@@ -1145,10 +1462,29 @@
         </div>`;
     }).join("");
 
+    const saOnly = SUPPLIERS.filter((s) =>
+      /Santo Amaro|Barreirinhas → Jeri|Rota das Emoções|Transfer pós-trek|SA →/i.test(
+        s.category
+      )
+    );
+
     return `
       <section class="section is-active">
         <h2>Anexo — Fornecedores (contatos, páginas, valores)</h2>
-        <p class="lede">Lista operacional para reservar. Preços de mercado jul/2026 — confirmem no WhatsApp antes de pagar. Nada de códigos de reserva pessoais neste site.</p>
+        <p class="lede">Lista operacional completa. Bloco “Santo Amaro → Jeri” está detalhado também na aba <b>SA → Jeri ★</b>. Preços jul/2026 — confirmem no WhatsApp.</p>
+
+        <h3>Foco: saída de Santo Amaro / chegada Jeri</h3>
+        ${table(
+          ["Fornecedor", "O que faz", "Preço", "Contato"],
+          saOnly.map((s) => [
+            s.name.split("—")[0].trim(),
+            s.what.slice(0, 90) + "…",
+            s.price,
+            s.contact.split("·")[0].trim(),
+          ])
+        )}
+
+        <h3>Todos os fornecedores da viagem</h3>
         ${table(
           ["Categoria", "Fornecedor", "Valor ref.", "Contato rápido"],
           SUPPLIERS.map((s) => [
@@ -1267,6 +1603,7 @@
   function renderContent(budget) {
     const map = {
       visao: () => sectionVisao(budget),
+      sa_jeri: sectionSaJeri,
       planos: sectionPlanos,
       dias: sectionDias,
       travessia: sectionTravessia,
@@ -1391,6 +1728,15 @@
     const btn = e.target.closest("[data-tab]");
     if (!btn) return;
     state.tab = btn.dataset.tab;
+    render();
+    document.getElementById("conteudo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  els.conteudo.addEventListener("click", (e) => {
+    const jump = e.target.closest("[data-tab-jump]");
+    if (!jump) return;
+    e.preventDefault();
+    state.tab = jump.dataset.tabJump;
     render();
     document.getElementById("conteudo")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
