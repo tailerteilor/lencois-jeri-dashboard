@@ -6,7 +6,7 @@
     <title>Lençóis × Jeri — Controle da viagem</title>
     <meta
       name="description"
-      content="Dashboard da viagem 03–13/08: POA → Lençóis → Jericoacoara → Fortaleza → POA. Voos de ida e volta fixos."
+      content="Painel completo 03–13/08/2026: voos no teto de R$6.000, horários validados, motivos de cada escolha."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,18 +26,19 @@
             <span>× Jeri</span>
           </h1>
           <p class="hero__lead">
-            Janela travada 03–13/08/2026 — ida LATAM e volta Azul já compradas.
-            Travessia, Jeri e transfers encaixam nesses horários.
+            Painel de controle da viagem 03–13/08/2026. Ida LATAM e volta Azul já
+            compradas entram no teto de R$ 6.000/pessoa. Cada escolha abaixo tem
+            motivo e restrição de horário pesquisada.
           </p>
           <div class="hero__meta">
             <span class="chip chip--solid">Ida 03/08 · POA 04:45 → SLZ 10:45</span>
             <span class="chip chip--solid">Volta 13/08 · FOR 12:50 → POA 18:50</span>
-            <span class="chip">Teto R$ 6.000 / pessoa (sem aviões)</span>
-            <span class="chip">Ambos os voos já pagos</span>
+            <span class="chip">Teto R$ 6.000 / pessoa · com aviões</span>
+            <span class="chip">Horários validados · jul/2026</span>
           </div>
           <div class="hero__cta">
-            <a class="btn btn--primary" href="#painel">Ver roteiro</a>
-            <a class="btn btn--ghost" href="#conteudo">Calendário</a>
+            <a class="btn btn--primary" href="#painel">Abrir painel</a>
+            <a class="btn btn--ghost" href="#conteudo">Ver viabilidade</a>
           </div>
           <div class="route-rail">
             <b>POA</b><span class="dot"></span><b>SLZ</b><span class="dot"></span
@@ -49,36 +50,39 @@
 
       <main class="wrap panel" id="painel">
         <div class="alert alert--warn">
-          <strong>Duas âncoras inalteráveis</strong>
-          Chegada São Luís 03/08 às 10:45 · saída Fortaleza 13/08 às 12:50. Van
-          compartilhada Jeri→FOR no dia 13 não serve — durmam em Fortaleza no dia 12
-          ou usem privativo de madrugada.
+          <strong>Leitura obrigatória antes de reservar qualquer transfer</strong>
+          No dia 03/08 vocês chegam em SLZ às 10:45 — dá para ir a Barreirinhas no
+          mesmo dia, mas <em>não</em> dá para pegar a lancha coletiva das 12:30 para
+          Atins. Por isso a noite do dia 03 é em Barreirinhas. O transfer compartilhado
+          Barreirinhas→Jeri da Rota Combo roda terça, quinta e sábado; no roteiro base o
+          dia 08/08 é sábado — por isso essa data. A volta 12:50 em Fortaleza exige noite
+          em FOR no dia 12 ou privativo de madrugada.
         </div>
 
         <div class="controls" id="controls">
           <div class="field">
-            <label for="scenario">Cenário de gasto</label>
+            <label for="scenario">Cenário de gasto (com aviões no teto)</label>
             <select id="scenario">
-              <option value="enxuto">Enxuto — cabe folgado</option>
-              <option value="equilibrado" selected>Equilibrado — melhor fit</option>
-              <option value="confortavel">Confortável — risco de estourar</option>
+              <option value="enxuto">Enxuto — margem maior</option>
+              <option value="equilibrado" selected>Equilibrado — recomendado</option>
+              <option value="confortavel">Confortável — pode estourar</option>
             </select>
           </div>
           <div class="field">
             <label for="plan">Plano dentro de 03–13/08</label>
             <select id="plan">
-              <option value="base" selected>Base — recomendado</option>
-              <option value="jeri_curta">Jeri curta + buffer Barreirinhas</option>
-              <option value="delta">Com Delta (corta Jeri)</option>
+              <option value="base" selected>Base — melhor encaixe de horários</option>
+              <option value="jeri_curta">Buffer extra em Barreirinhas</option>
+              <option value="delta">Incluir Delta (corta Jeri)</option>
             </select>
           </div>
           <div class="field">
             <label for="jeriNights">Noites em Jericoacoara</label>
             <select id="jeriNights">
-              <option value="0">Pular Jeri</option>
-              <option value="2">2 noites — Jeri curta</option>
-              <option value="3" selected>3 noites — equilíbrio</option>
-              <option value="4">4 noites — Jeri cheia</option>
+              <option value="0">0 — pular Jeri</option>
+              <option value="2">2 noites</option>
+              <option value="3" selected>3 noites — base</option>
+              <option value="4">4 noites</option>
             </select>
           </div>
           <div class="field">
