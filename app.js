@@ -3,7 +3,185 @@
   const OUTBOUND_PAID = 580;
   const RETURN_PAID = 589;
   const TREK_QUOTE = 2100;
-  const STORAGE_KEY = "lencois-jeri-dashboard-v4";
+  const STORAGE_KEY = "lencois-jeri-dashboard-v5";
+
+  /**
+   * Três modos de viver os Lençóis (pesquisa jul/2026).
+   * Totais abaixo = só o trecho Lençóis (~4–5 dias úteis), por pessoa, cenário equilibrado tipico.
+   * Voos / Jeri / FOR ficam fora deste subtotal.
+   */
+  const LENCOIS_MODES = {
+    conta: {
+      id: "conta",
+      num: "1",
+      label: "Por conta (semi-DIY)",
+      tagline: "Vocês montam logística; não existe jeep particular no parque.",
+      subtotal: 1450,
+      range: "R$ 1.200–1.900",
+      effort: "Alto",
+      immersion: "Média (orla + lagoas próximas)",
+      fitness: "Baixo–médio",
+      why: "ICMBio proíbe carro particular e exige condutor/veículo credenciado para passeios motorizados. “Por conta” = escolher pousada, caminhar onde for permitido a pé, e comprar só os 4×4/lancha que quiserem — peça a peça.",
+      includes: [
+        "Pousada nas bases (BRR / Atins / SA)",
+        "Caminhadas a pé até lagoas acessíveis (Atins/SA — confirmar regra vigente na chegada)",
+        "Transfers e lanchas comprados avulso",
+        "1 passeio 4×4 pontual (opcional no checklist)",
+      ],
+      excludes: [
+        "Jeep próprio nas dunas (proibido)",
+        "Travessia multi-dia sem guia (não recomendado / logística dos oásis)",
+        "Alimentação inclusa",
+      ],
+      bestFor: "Casal que quer economizar, ritmar leve e aceita ver a “borda” do parque, não o miolo.",
+    },
+    travessia: {
+      id: "travessia",
+      num: "2",
+      label: "Com guia — travessia a pé",
+      tagline: "Walter (ou similar): Atins → Santo Amaro em 4 dias, comida inclusa.",
+      subtotal: 2550,
+      range: "R$ 2.200–4.000",
+      effort: "Alto (8–17 km/dia)",
+      immersion: "Máxima (miolo do parque + oásis)",
+      fitness: "Moderado+",
+      why: "Única forma de cruzar o interior dormindo em Baixa Grande / Queimada / Betânia. Cotação de vocês R$ 2.100 + lancha até Atins. Mercado: grupos ~R$ 1.580–2.250; pacotes “tudo incluso” ~R$ 3.200–3.950.",
+      includes: [
+        "Guia credenciado a partir de Atins",
+        "3 noites redário nos oásis",
+        "Café, almoço e jantar nos dias de trilha",
+        "4×4 internos da travessia (conforme pacote)",
+      ],
+      excludes: [
+        "Lancha Barreirinhas → Atins (conta de vocês)",
+        "Van SLZ → BRR",
+        "Transfer SA/BRR → Jeri",
+        "Água engarrafada / bebidas",
+      ],
+      bestFor: "Quem quer a experiência “de verdade” dos Lençóis e aceita esforço + madrugada.",
+    },
+    bases: {
+      id: "bases",
+      num: "3",
+      label: "Bases + 4×4 o dia todo",
+      tagline: "Dormir em BRR, Atins ou SA e fazer circuitos de jardineira todos os dias.",
+      subtotal: 2100,
+      range: "R$ 1.700–2.800",
+      effort: "Baixo–médio (chacoalho do 4×4)",
+      immersion: "Alta nas lagoas famosas; baixa no miolo",
+      fitness: "Baixo",
+      why: "Modelo clássico de turismo. Cada dia = um circuito compartilhado ou privativo. Dá para misturar bases (ex.: 2 noites BRR + 1 Atins + 1 SA). Mais confortável que a travessia; menos selvagem.",
+      includes: [
+        "Pousada com banheiro / cama",
+        "Circuitos Azul, Bonita, Betânia, Canto do Atins, Rio Preguiças…",
+        "Guia do passeio no preço do 4×4",
+        "Volta para a pousada todo fim de tarde",
+      ],
+      excludes: [
+        "Pernoite no oásis",
+        "Travessia a pé entre comunidades",
+        "Almoço na maioria dos circuitos",
+      ],
+      bestFor: "Casal que prioriza lagoas + conforto e quer chegar inteiro em Jeri.",
+    },
+  };
+
+  const TOURS_LENCOIS = [
+    {
+      id: "azul",
+      base: "Barreirinhas",
+      name: "Circuito Lagoa Azul",
+      when: "Manhã ~8h30–13h",
+      price: 150,
+      suppliers: "Kairós ~R$ 150 · Relax ~R$ 160 · Rolê das Trilhas ~R$ 167 · Découverte ~R$ 109",
+      detail:
+        "Balsa Rio Preguiças + 4×4 ~40–45 min. A pé: Lagoa Azul, Esmeralda, Peixe (nomes variam com a água da época). Banho + fotos. Clássico #1 de BRR.",
+      link: "https://loja.kairostur.com.br/passeio/passeio-circuito-lagoa-azul",
+    },
+    {
+      id: "bonita",
+      base: "Barreirinhas",
+      name: "Circuito Lagoa Bonita (pôr do sol)",
+      when: "Tarde ~13h30–19h",
+      price: 150,
+      suppliers: "Kairós ~R$ 150 · Delterra ~R$ 180 · Relax ~R$ 160",
+      detail:
+        "4×4 ~55–60 min + subida de duna alta (escada/~40–80 m). Vista panorâmica, Bonita/Maçarico, pôr do sol. Pode fazer Azul de manhã + Bonita à tarde no mesmo dia (~R$ 300).",
+      link: "https://loja.kairostur.com.br/",
+    },
+    {
+      id: "rio",
+      base: "Barreirinhas",
+      name: "Lancha Rio Preguiças (Vassouras · Mandacaru · Caburé)",
+      when: "Manhã ~8h30 · ~4–5h (ou transfer até Atins)",
+      price: 180,
+      suppliers: "Atins Lençóis Adventure ~R$ 180 · agências do porto BRR · Satur/K-Beça (direto Atins ~R$ 80–100)",
+      detail:
+        "Pequenos Lençóis, farol de Mandacaru, Caburé (rio×mar). Dá para descer em Atins no fim e ficar. Não substitui Azul/Bonita (outro cenário).",
+      link: "https://atinslencoisadventure.tur.br/",
+    },
+    {
+      id: "cardosa",
+      base: "Barreirinhas",
+      name: "Povoado Cardosa + bóia-cross (opcional)",
+      when: "Meio dia / dia",
+      price: 200,
+      suppliers: "Rolê das Trilhas e agências locais BRR",
+      detail: "Comunidade + rio; bóia-cross à parte. Menos “cartão-postal” que Azul/Bonita.",
+      link: "https://roledastrilhas.com.br/passeios-e-transfers-nos-lencois-maranhenses/",
+    },
+    {
+      id: "canto",
+      base: "Atins",
+      name: "Canto do Atins (lagoas)",
+      when: "~4h · tarde ou manhã",
+      price: 190,
+      suppliers: "Maventur ~R$ 190 · pousadas locais",
+      detail: "Lagoa do Kite, Gavião, Maria Vitória / Sete Mulheres. Camarão no Canto (~R$ 45) no almoço (não incluso).",
+      link: "https://maventur.com.br/passeios-em-atins/",
+    },
+    {
+      id: "mangue",
+      base: "Atins",
+      name: "Ponta do Mangue",
+      when: "~4h",
+      price: 190,
+      suppliers: "Maventur ~R$ 190",
+      detail: "Poço Verde, Esmeralda, Gorjeta, Tropical — mais “parque” que praia.",
+      link: "https://maventur.com.br/passeios-em-atins/",
+    },
+    {
+      id: "atins_dia",
+      base: "Atins",
+      name: "Dia inteiro Canto + Mangue",
+      when: "~9h–18h30",
+      price: 280,
+      suppliers: "Maventur ~R$ 280 · Caetés privativo casal ~R$ 968/pess. (R$ 1.815/carro÷2) · PasseioJá priv. ~R$ 1.400/carro",
+      detail: "Os dois circuitos sem voltar à pousada no meio. Melhor dia “cheio” em Atins. Em agosto preferir 4×4 a longas caminhadas.",
+      link: "https://maventur.com.br/produto/dia-inteiro-nos-lencois/",
+    },
+    {
+      id: "betania",
+      base: "Santo Amaro",
+      name: "Circuito Betânia (dia todo)",
+      when: "~9h–18h",
+      price: 220,
+      suppliers: "Enjoy ~R$ 300 · Lotus ~R$ 200 · Delterra ~R$ 180 · Noz Tour ~R$ 200",
+      detail:
+        "4×4 por dunas + lagoas (Cajueirinho, Junco, Toco…) + almoço no povoado Betânia (não incluso) + banho Rio Alegre. Taxa turismo SA ~R$ 10 + barco ~R$ 10–15 espécie.",
+      link: "https://enjoymaranhao.com.br/servicos/betania-santo-amaro/",
+    },
+    {
+      id: "sa_lagoas",
+      base: "Santo Amaro",
+      name: "Lagoas de Santo Amaro (meio dia / a pé ou 4×4 curto)",
+      when: "Meio dia",
+      price: 120,
+      suppliers: "Lotus a partir ~R$ 120 · guias locais SA",
+      detail: "SA fica colado nas dunas — dá para ver lagoas com menos tempo/custo que Betânia completo.",
+      link: "https://lotusturismo.com.br/passeios/circuito-betania/",
+    },
+  ];
 
   const SCENARIO = {
     enxuto: {
@@ -343,20 +521,110 @@
 
   /**
    * Itens de orçamento com checklist.
-   * pp = preço por pessoa; halfCar = divide carro por 2.
-   * plans: quais planos mostram o item (default ambos)
+   * lencoisMode: conta | travessia | bases
    */
-  function buildCatalog(scenario, plan, trekMode, jeriNights) {
+  function buildCatalog(scenario, plan, lencoisMode, jeriNights) {
     const s = SCENARIO[scenario];
-    const trek =
-      trekMode === "cotacao" ? TREK_QUOTE : trekMode === "grupo_barato" ? 1580 : 3700;
+    const mode = lencoisMode || "travessia";
     const jeriN = Number(jeriNights || 3);
-
-    const foodTrekDays = 0; // Walter inclui alimentação
+    const foodTrekDays = 0;
     const foodNonTrek =
-      plan === "atins"
-        ? s.foodDay * 6 // 03 BRR, 04 Atins, 08/09 transfer+chegada, 3 dias Jeri approx, 12 FOR — aproximado via checklist
-        : s.foodDay * 5;
+      plan === "atins" ? s.foodDay * 6 : s.foodDay * 5;
+
+    const hotelsBasesMix = s.hotelBrr * 2 + s.hotelAtins + s.hotelSa;
+    const hotelsConta = s.hotelBrr * 3 + Math.round(s.hotelAtins * 0.5);
+
+    const modeBlock =
+      mode === "travessia"
+        ? [
+            {
+              id: "trek",
+              group: "2. Lençóis — modo travessia (guia)",
+              label: "Pacote trilha 4 dias (Walter / similar)",
+              pp: TREK_QUOTE,
+              defaultOn: true,
+              meta: "R$ 2.100 cotação · comida na trilha inclusa · encontro em Atins. Mercado: R$ 1.580–3.950.",
+            },
+            {
+              id: "food_trek_zero",
+              group: "2. Lençóis — modo travessia (guia)",
+              label: "Alimentação nos dias de trilha",
+              pp: foodTrekDays,
+              defaultOn: true,
+              locked: true,
+              meta: "R$ 0 — inclusa no guia. Não somem restaurante nesses dias.",
+            },
+          ]
+        : mode === "bases"
+          ? [
+              {
+                id: "hotels_bases",
+                group: "2. Lençóis — modo bases + 4×4",
+                label: "Pousadas 4 noites (mix BRR×2 + Atins + SA)",
+                pp: hotelsBasesMix,
+                defaultOn: true,
+                meta: `Estimativa ${SCENARIO[scenario].label}. Ajustem no Booking; Atins costuma ser a base mais cara.`,
+              },
+              {
+                id: "food_bases",
+                group: "2. Lençóis — modo bases + 4×4",
+                label: "Comida nos dias Lençóis (tudo fora — sem trilha)",
+                pp: Math.round(s.foodDay * 5),
+                defaultOn: true,
+                meta: "Almoço dos passeios quase nunca incluso. Espécie para Betânia/Canto.",
+              },
+              ...TOURS_LENCOIS.map((t) => ({
+                id: `tour_${t.id}`,
+                group: `2b. Passeios 4×4 — ${t.base}`,
+                label: `${t.name} (${t.when})`,
+                pp: t.price,
+                defaultOn: ["azul", "bonita", "betania"].includes(t.id),
+                meta: `${t.detail} Fornecedores: ${t.suppliers}`,
+              })),
+            ]
+          : [
+              {
+                id: "hotels_conta",
+                group: "2. Lençóis — modo por conta",
+                label: "Pousadas ~3,5 noites (ênfase BRR barata)",
+                pp: hotelsConta,
+                defaultOn: true,
+                meta: "Semi-DIY: base barata + caminhadas. ICMBio: sem carro particular nas dunas.",
+              },
+              {
+                id: "food_conta",
+                group: "2. Lençóis — modo por conta",
+                label: "Comida Lençóis (todos os dias)",
+                pp: Math.round(s.foodDay * 5),
+                defaultOn: true,
+                meta: "Cozinha local / mercado. Sem pacote de oásis.",
+              },
+              {
+                id: "walk_free",
+                group: "2. Lençóis — modo por conta",
+                label: "Caminhada a lagoas (Atins/SA) — a pé",
+                pp: 0,
+                defaultOn: true,
+                locked: true,
+                meta: "R$ 0. Confirmar regra ICMBio na chegada. Em agosto lagoas pedem mais 4×4.",
+              },
+              {
+                id: "tour_azul",
+                group: "2. Lençóis — modo por conta",
+                label: "1× Circuito Lagoa Azul (recomendado)",
+                pp: 150,
+                defaultOn: true,
+                meta: "Kairós/Relax ~R$ 150. Um dia de 4×4 credenciado para não ir embora sem ver o clássico.",
+              },
+              {
+                id: "tour_bonita_opt",
+                group: "2. Lençóis — modo por conta",
+                label: "Opcional: Lagoa Bonita",
+                pp: 150,
+                defaultOn: false,
+                meta: "Desmarque se o teto apertar. Azul+Bonita no mesmo dia ≈ R$ 300.",
+              },
+            ];
 
     return [
       {
@@ -377,31 +645,14 @@
         locked: true,
         meta: "Já pago · ~R$ 1.178,82 / 2. Entra no teto.",
       },
-      {
-        id: "trek",
-        group: "2. Travessia (Walter)",
-        label: "Pacote trilha 4 dias",
-        pp: trek,
-        defaultOn: true,
-        locked: false,
-        meta: "Incluso: guia + oásis + alimentação nos dias de trilha. Encontro em Atins. Fora: lancha BRR→Atins.",
-      },
-      {
-        id: "food_trek_zero",
-        group: "2. Travessia (Walter)",
-        label: "Alimentação nos dias de trilha",
-        pp: foodTrekDays,
-        defaultOn: true,
-        locked: true,
-        meta: "R$ 0 — inclusa no valor do Walter. Não somem restaurante nesses dias.",
-      },
+      ...modeBlock,
       {
         id: "lancha",
-        group: "3. Chegada aos Lençóis",
-        label: "Lancha Barreirinhas → Atins (conta de vocês)",
+        group: "3. Chegada / deslocamentos Lençóis",
+        label: "Lancha Barreirinhas → Atins",
         pp: 100,
-        defaultOn: true,
-        meta: "Satur / K-Beça · ~12:30 · ~R$ 70–150. NÃO está no pacote do Walter.",
+        defaultOn: mode === "travessia" || plan === "atins" || mode === "bases",
+        meta: "Satur / K-Beça · ~12:30 · ~R$ 70–150. No modo bases: só se forem dormir/passear em Atins.",
       },
       {
         id: "van_slz",
@@ -429,57 +680,63 @@
       },
       {
         id: "hotel_atins_04",
-        group: "4. Noite / dia em Atins",
+        group: "4. Noite / dia em Atins (só travessia)",
         label: "Pousada Atins noite 04/08",
         pp: s.hotelAtins,
         defaultOn: plan === "atins",
         plans: ["atins"],
-        meta: "Só no plano COM noite em Atins. Vila charmosa — vale a pena se aceitarem o impacto no transfer.",
+        modes: ["travessia"],
+        meta: "Só no plano COM noite em Atins + modo travessia.",
       },
       {
         id: "food_atins_04",
-        group: "4. Noite / dia em Atins",
+        group: "4. Noite / dia em Atins (só travessia)",
         label: "Comida Atins dia 04 (fora da trilha)",
         pp: Math.round(s.foodDay * 1.4),
         defaultOn: plan === "atins",
         plans: ["atins"],
-        meta: "Camarão no Canto do Atins ~R$ 45/pessoa + jantar na vila. Trilha ainda não começou → comida NÃO inclusa.",
+        modes: ["travessia"],
+        meta: "Camarão no Canto ~R$ 45 + jantar. Antes do Walter → comida NÃO inclusa.",
       },
       {
-        id: "tour_canto",
-        group: "4. Noite / dia em Atins",
-        label: "Passeio Canto do Atins (lagoas)",
+        id: "tour_canto_pre",
+        group: "4. Noite / dia em Atins (só travessia)",
+        label: "Passeio Canto do Atins dia 04",
         pp: 190,
         defaultOn: plan === "atins",
         plans: ["atins"],
-        meta: "Maventur ~R$ 190 · Lagoa do Kite, Gavião, Maria Vitória · ~4h. Recomendado no dia 04.",
+        modes: ["travessia"],
+        meta: "Maventur ~R$ 190. No modo bases este passeio aparece na lista 2b.",
       },
       {
-        id: "tour_mangue",
-        group: "4. Noite / dia em Atins",
-        label: "Alt: Ponta do Mangue (em vez do Canto)",
+        id: "tour_mangue_pre",
+        group: "4. Noite / dia em Atins (só travessia)",
+        label: "Alt: Ponta do Mangue dia 04",
         pp: 190,
         defaultOn: false,
         plans: ["atins"],
-        meta: "Esmeralda, Gorjeta, Tropical · ~R$ 190. Marque um OU outro, não os dois no mesmo dia.",
+        modes: ["travessia"],
+        meta: "~R$ 190. Um OU outro no dia 04.",
       },
       {
-        id: "tour_dia_inteiro",
-        group: "4. Noite / dia em Atins",
+        id: "tour_dia_inteiro_pre",
+        group: "4. Noite / dia em Atins (só travessia)",
         label: "Alt: Dia inteiro Canto + Mangue",
         pp: 280,
         defaultOn: false,
         plans: ["atins"],
-        meta: "Maventur ~R$ 280. Se marcar este, desmarque Canto/Mangue isolados.",
+        modes: ["travessia"],
+        meta: "Maventur ~R$ 280.",
       },
       {
         id: "tour_guaras",
-        group: "4. Noite / dia em Atins",
-        label: "Opcional: Revoada dos Guarás (lancha)",
+        group: "4. Noite / dia em Atins (só travessia)",
+        label: "Opcional: Revoada dos Guarás",
         pp: 190,
         defaultOn: false,
         plans: ["atins"],
-        meta: "~3h · fim de tarde. Combina com noite na vila; confirme horário da maré.",
+        modes: ["travessia"],
+        meta: "~3h · fim de tarde.",
       },
       {
         id: "transfer_jeri_shared",
@@ -625,7 +882,11 @@
         defaultOn: false,
         meta: "Só se quiserem margem extra de restaurante.",
       },
-    ].filter((item) => !item.plans || item.plans.includes(plan));
+    ].filter(
+      (item) =>
+        (!item.plans || item.plans.includes(plan)) &&
+        (!item.modes || item.modes.includes(mode))
+    );
   }
 
   const PLANS = {
@@ -684,8 +945,9 @@
 
   const TABS = [
     { id: "visao", label: "Visão geral" },
-    { id: "sa_jeri", label: "SA → Jeri ★" },
-    { id: "planos", label: "Dois planos" },
+    { id: "modos", label: "Modos Lençóis ★" },
+    { id: "sa_jeri", label: "SA → Jeri" },
+    { id: "planos", label: "Calendário" },
     { id: "dias", label: "Dia a dia" },
     { id: "travessia", label: "Travessia" },
     { id: "jeri", label: "Rota Leste / casal" },
@@ -743,8 +1005,8 @@
     scenario: saved?.scenario || "equilibrado",
     plan: saved?.plan || "atins",
     jeriNights: String(saved?.jeriNights ?? "3"),
-    trekMode: saved?.trekMode || "cotacao",
-    tab: saved?.tab || "sa_jeri",
+    lencoisMode: saved?.lencoisMode || "travessia",
+    tab: saved?.tab || "modos",
     notes: saved?.notes || "",
     tasks: { ...DEFAULT_TASKS, ...(saved?.tasks || {}) },
     lines: saved?.lines || null,
@@ -754,7 +1016,7 @@
     scenario: document.getElementById("scenario"),
     plan: document.getElementById("plan"),
     jeriNights: document.getElementById("jeriNights"),
-    trekMode: document.getElementById("trekMode"),
+    lencoisMode: document.getElementById("lencoisMode"),
     stats: document.getElementById("stats"),
     usage: document.getElementById("usage"),
     tabs: document.getElementById("tabs"),
@@ -767,7 +1029,7 @@
     return buildCatalog(
       state.scenario,
       state.plan,
-      state.trekMode,
+      state.lencoisMode,
       state.jeriNights
     );
   }
@@ -932,8 +1194,8 @@
         <div class="stat__label">${over ? "Acima do teto" : "Folga no teto"}</div>
       </div>
       <div class="stat">
-        <div class="stat__value">${PLANS[state.plan].short}</div>
-        <div class="stat__label">Plano ativo</div>
+        <div class="stat__value">${(LENCOIS_MODES[state.lencoisMode] || {}).num || "?"} · ${state.lencoisMode === "travessia" ? "Guia" : state.lencoisMode === "bases" ? "Bases" : "Conta"}</div>
+        <div class="stat__label">${PLANS[state.plan].short}</div>
       </div>
       <div class="stat stat--info">
         <div class="stat__value">${money(OUTBOUND_PAID + RETURN_PAID)}</div>
@@ -984,11 +1246,151 @@
     ).join("");
   }
 
-  function sectionVisao(budget) {
+  function sectionModos() {
+    const cards = ["conta", "travessia", "bases"]
+      .map((id) => {
+        const m = LENCOIS_MODES[id];
+        const active = state.lencoisMode === id;
+        return `
+        <div class="block" style="${active ? "outline:2px solid var(--lagoon);outline-offset:2px" : ""}">
+          <div class="block__title">${m.num} · ${m.label}</div>
+          <p><b>${m.tagline}</b></p>
+          <p>Subtotal Lençóis tipico: <b>${m.range}</b>/pessoa · esforço ${m.effort} · imersão ${m.immersion}</p>
+          <p class="muted">${m.why}</p>
+          <p><b>Incluso / ideia:</b></p>
+          <ul>${m.includes.map((x) => `<li>${x}</li>`).join("")}</ul>
+          <p><b>Fora:</b></p>
+          <ul>${m.excludes.map((x) => `<li>${x}</li>`).join("")}</ul>
+          <p><b>Melhor para:</b> ${m.bestFor}</p>
+          <button type="button" class="btn ${active ? "btn--primary" : "btn--soft"} btn--sm" data-set-mode="${id}">
+            ${active ? "Modo ativo" : "Usar este modo no orçamento"}
+          </button>
+        </div>`;
+      })
+      .join("");
+
+    const tourRows = TOURS_LENCOIS.map((t) => [
+      t.base,
+      t.name,
+      money(t.price),
+      t.when,
+      t.suppliers.split("·")[0].trim(),
+    ]);
+
     return `
       <section class="section is-active">
-        <h2>O que está decidido — e o que o Walter inclui</h2>
-        <p class="lede">Teto ${money(CAP)}/pessoa com os dois aviões. Travessia cotada a ${money(TREK_QUOTE)}. Alimentação nos dias de trilha = R$ 0 extra. Lancha até Atins = conta de vocês.</p>
+        <h2>Três formas de fazer os Lençóis — preços e fornecedores</h2>
+        <p class="lede">Tudo em aberto: compare e escolha no seletor <b>Como fazer os Lençóis</b>. O orçamento do topo recalcula. Pesquisa de mercado jul/2026 (Kairós, Maventur, Enjoy, Lotus, Trilha Tour, ICMBio, RTUR, Rota Combo).</p>
+
+        ${explain(
+          "Regra ICMBio (importante no modo 1)",
+          " Não existe “alugar um 4×4 e entrar sozinho”. Transporte e condução de visitantes no parque exigem <b>veículo e condutor credenciados</b>. Carro particular, buggy e quadriciclo de turista são proibidos nas dunas. “Por conta” = montar pousada + caminhadas a pé (onde permitido) + comprar passeios credenciados avulso — não é faroeste."
+        )}
+
+        <div class="compare-grid" style="grid-template-columns:1fr">
+          ${cards}
+        </div>
+
+        <h3>Comparativo rápido (só trecho Lençóis ~4–5 dias / pessoa)</h3>
+        ${table(
+          ["Modo", "Subtotal tipico", "O que compram", "Chegam a Jeri como?"],
+          [
+            ["1 · Por conta", LENCOIS_MODES.conta.range, "Pousada + 0–2× 4×4 + comida", "Igual: SA/BRR → cadeia Rota Combo / privativo"],
+            ["2 · Travessia guia", "R$ 2.100 guia + ~R$ 400 logistica = ~R$ 2.500+", "Walter + lancha + 1 noite BRR", "Fim em Santo Amaro → ver aba SA→Jeri"],
+            ["3 · Bases + 4×4", LENCOIS_MODES.bases.range, "4 noites + 3–5 circuitos", "Saindo da última base (BRR ou SA)"],
+          ],
+          { tones: ["info", "ok", "ok"] }
+        )}
+
+        ${explain(
+          "Veredito autônomo",
+          state.lencoisMode === "travessia"
+            ? " Mantendo <b>travessia</b>: é o diferencial da viagem e a cotação R$ 2.100 está boa vs mercado (Trilha Tour lista ~R$ 2.250–3.950). Usem Plano A ou B só para decidir noite em Atins."
+            : state.lencoisMode === "bases"
+              ? " Modo <b>bases</b>: marquém Azul + Bonita + Betânia no Orçamento (~R$ 520 só de passeios) e 4 noites. Mais barato e confortável que a travessia; não dormem no oásis."
+              : " Modo <b>por conta</b>: máximo de folga no teto. Façam ao menos Lagoa Azul um dia. Em agosto, não contem só com caminhada longa — lagoas afastam."
+        )}
+
+        <h3>Catálogo de passeios 4×4 (modo bases — e avulsos no modo conta)</h3>
+        ${table(
+          ["Base", "Passeio", "≈ R$/pess.", "Horário", "Fornecedor (ex.)"],
+          tourRows,
+          { aligns: ["left", "left", "right", "left", "left"] }
+        )}
+
+        <h3>Detalhe dos circuitos por base</h3>
+        ${TOURS_LENCOIS.map(
+          (t) => `
+          <div class="day-card">
+            <h3>${t.base} · ${t.name} · ${money(t.price)}</h3>
+            <p><b>Quando:</b> ${t.when}</p>
+            <p>${t.detail}</p>
+            <p class="muted"><b>Fornecedores:</b> ${t.suppliers}${t.link ? ` · <a href="${t.link}" target="_blank" rel="noopener">link</a>` : ""}</p>
+          </div>`
+        ).join("")}
+
+        <h3>Roteiros-modelo na janela 03–08/08 (antes de Jeri)</h3>
+        <div class="grid-3">
+          <div class="block">
+            <div class="block__title">Modo 1 · Por conta</div>
+            <ul>
+              <li>03 BRR · ATM</li>
+              <li>04 Azul OU caminhada SA/Atins</li>
+              <li>05 Bonita opcional / folga</li>
+              <li>06–07 base barata + praia/rio</li>
+              <li>08 → Jeri (malha)</li>
+            </ul>
+            <p class="muted">≈ ${LENCOIS_MODES.conta.range}/pess. Lençóis</p>
+          </div>
+          <div class="block">
+            <div class="block__title">Modo 2 · Travessia</div>
+            <ul>
+              <li>03 BRR</li>
+              <li>04 lancha Atins (± noite)</li>
+              <li>05–07/08 oásis com Walter</li>
+              <li>Comida inclusa nos dias de trilha</li>
+              <li>Saída SA → Jeri</li>
+            </ul>
+            <p class="muted">Guia ${money(TREK_QUOTE)} + lancha/hotéis fora</p>
+          </div>
+          <div class="block">
+            <div class="block__title">Modo 3 · Bases + 4×4</div>
+            <ul>
+              <li>03 BRR</li>
+              <li>04 Azul + Bonita (mesmo dia)</li>
+              <li>05 Rio Preguiças → Atins</li>
+              <li>06 Canto/Mangue em Atins</li>
+              <li>07 SA + Betânia · 08 → Jeri</li>
+            </ul>
+            <p class="muted">≈ ${LENCOIS_MODES.bases.range}/pess. Lençóis</p>
+          </div>
+        </div>
+
+        <h3>Fornecedores-chave deste bloco</h3>
+        ${table(
+          ["Fornecedor", "Modo", "Serviço", "Contato / link"],
+          [
+            ["Walter (cotação)", "2 Travessia", "R$ 2.100 · Atins→SA", "WhatsApp de vocês"],
+            ["Trilha Tour", "2 Travessia", "Trek 4d a partir ~R$ 2.250–3.950", "trilhatour.com.br"],
+            ["Kairós Tur", "1 e 3", "Azul/Bonita ~R$ 150 · van SLZ", "98 98852-7434"],
+            ["Maventur", "3 Bases / Atins", "Canto/Mangue/Dia ~R$ 190–280", "maventur.com.br"],
+            ["Enjoy Maranhão", "3 · Santo Amaro", "Betânia a partir ~R$ 300", "enjoymaranhao.com.br"],
+            ["Lotus Turismo", "3 · Santo Amaro", "Betânia ~R$ 200", "lotusturismo.com.br"],
+            ["Satur / K-Beça", "todos", "Lancha BRR↔Atins ~R$ 80–100", "98 99232-8780 / 98827-7715"],
+            ["ICMBio", "regra", "Credenciamento obrigatório 4×4", "gov.br/icmbio"],
+          ]
+        )}
+
+        <p class="muted">Preços de alta (agosto) sobem e lotam — reservem com a data na mão. No Orçamento ✓ cada passeio é checkbox.</p>
+      </section>`;
+  }
+
+  function sectionVisao(budget) {
+    const mode = LENCOIS_MODES[state.lencoisMode] || LENCOIS_MODES.travessia;
+    return `
+      <section class="section is-active">
+        <h2>Visão geral — modo Lençóis: ${mode.num} · ${mode.label}</h2>
+        <p class="lede">Teto ${money(CAP)}/pessoa com aviões. Modo ativo: <b>${mode.label}</b> (${mode.range} só no trecho Lençóis). Troque em <b>Modos Lençóis ★</b> ou no seletor do topo.</p>
 
         ${table(
           ["Item", "Detalhe", "No teto?"],
@@ -1603,6 +2005,7 @@
   function renderContent(budget) {
     const map = {
       visao: () => sectionVisao(budget),
+      modos: sectionModos,
       sa_jeri: sectionSaJeri,
       planos: sectionPlanos,
       dias: sectionDias,
@@ -1673,11 +2076,20 @@
     els.scenario.value = state.scenario;
     els.plan.value = state.plan;
     els.jeriNights.value = state.jeriNights;
-    els.trekMode.value = state.trekMode;
+    els.lencoisMode.value = state.lencoisMode;
+  }
+
+  function applyModeDefaults() {
+    state.lines = {};
+    catalog().forEach((item) => {
+      state.lines[item.id] = !!item.defaultOn;
+    });
+    if (state.lencoisMode === "travessia") applyPlanDefaults();
   }
 
   function renderFooter(budget) {
-    els.footerStatus.textContent = `${money(budget.total)}/${money(CAP)} · ${PLANS[state.plan].short} · ${SCENARIO[state.scenario].label}`;
+    const m = LENCOIS_MODES[state.lencoisMode];
+    els.footerStatus.textContent = `${money(budget.total)}/${money(CAP)} · Lençóis:${m?.num} ${m?.label?.split("—")[0] || ""} · ${SCENARIO[state.scenario].label}`;
   }
 
   function applyPlanDefaults() {
@@ -1711,16 +2123,23 @@
     persist();
   }
 
-  ["scenario", "jeriNights", "trekMode"].forEach((key) => {
+  ["scenario", "jeriNights"].forEach((key) => {
     els[key].addEventListener("change", () => {
       state[key] = els[key].value;
       render();
     });
   });
 
+  els.lencoisMode.addEventListener("change", () => {
+    state.lencoisMode = els.lencoisMode.value;
+    applyModeDefaults();
+    render();
+  });
+
   els.plan.addEventListener("change", () => {
     state.plan = els.plan.value;
-    applyPlanDefaults();
+    if (state.lencoisMode === "travessia") applyPlanDefaults();
+    else applyModeDefaults();
     render();
   });
 
@@ -1734,11 +2153,20 @@
 
   els.conteudo.addEventListener("click", (e) => {
     const jump = e.target.closest("[data-tab-jump]");
-    if (!jump) return;
-    e.preventDefault();
-    state.tab = jump.dataset.tabJump;
-    render();
-    document.getElementById("conteudo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (jump) {
+      e.preventDefault();
+      state.tab = jump.dataset.tabJump;
+      render();
+      document.getElementById("conteudo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    const modeBtn = e.target.closest("[data-set-mode]");
+    if (modeBtn) {
+      state.lencoisMode = modeBtn.dataset.setMode;
+      applyModeDefaults();
+      state.tab = "orcamento";
+      render();
+    }
   });
 
   els.resetBtn.addEventListener("click", () => {
@@ -1746,17 +2174,16 @@
       scenario: "equilibrado",
       plan: "atins",
       jeriNights: "3",
-      trekMode: "cotacao",
-      tab: "visao",
+      lencoisMode: "travessia",
+      tab: "modos",
       lines: null,
     });
-    applyPlanDefaults();
+    applyModeDefaults();
     render();
     document.getElementById("painel")?.scrollIntoView({ behavior: "smooth" });
   });
 
-  // Boot: se não há lines salvas, aplicar padrões do plano
-  if (!saved?.lines) applyPlanDefaults();
+  if (!saved?.lines) applyModeDefaults();
   render();
 
   // ——— Loop de revisão automática (console) ———
