@@ -1,13 +1,37 @@
 (() => {
   const CAP = 6000;
-  const RETURN_PAID = 589;
+  const OUTBOUND_PAID = 580; // ~R$ 1.159,14 / 2 — já pago, fora do teto
+  const RETURN_PAID = 589; // ~R$ 1.178,82 / 2 — já pago, fora do teto
   const TREK_QUOTE = 2100;
-  const STORAGE_KEY = "lencois-jeri-dashboard-v1";
+  const STORAGE_KEY = "lencois-jeri-dashboard-v2";
+
+  // Âncoras públicas (sem códigos de reserva, documentos ou cartão)
+  const FLIGHTS = {
+    outbound: {
+      date: "03/08/2026",
+      weekday: "segunda",
+      from: "POA",
+      to: "SLZ",
+      dep: "04:45",
+      arr: "10:45",
+      airline: "LATAM",
+      notes: "1 conexão em Guarulhos · Economy Light",
+    },
+    inbound: {
+      date: "13/08/2026",
+      weekday: "quinta",
+      from: "FOR",
+      to: "POA",
+      dep: "12:50",
+      arr: "18:50",
+      airline: "Azul",
+      notes: "1 parada · econômica",
+    },
+  };
 
   const SCENARIO_META = {
     enxuto: {
       label: "Enxuto",
-      outbound: 1050,
       transfers: 720,
       food: 480,
       tours: 180,
@@ -15,7 +39,6 @@
     },
     equilibrado: {
       label: "Equilibrado",
-      outbound: 1180,
       transfers: 780,
       food: 620,
       tours: 300,
@@ -23,7 +46,6 @@
     },
     confortavel: {
       label: "Confortável",
-      outbound: 1450,
       transfers: 1100,
       food: 900,
       tours: 550,
@@ -38,43 +60,123 @@
     4: { enxuto: 520, equilibrado: 850, confortavel: 1500 },
   };
 
+  // Variantes DENTRO da janela fixa 03–13/08
   const CALENDARS = {
-    10: {
-      title: "10 dias · 04–13/08/2026 · apertado",
+    base: {
+      title: "Roteiro base · 03–13/08/2026 · recomendado",
       rows: [
-        ["04/08", "seg", "POA → SLZ (manhã) → van Barreirinhas", "Noite Barreirinhas"],
-        ["05–08/08", "4d", "Travessia Atins → Santo Amaro", "Redário oásis"],
-        ["09/08", "sáb", "Transfer Santo Amaro/Barreirinhas → Jeri (7–9h)", "Chegada Jeri noite"],
-        ["10–11/08", "2d", "Jeri: Leste (Paraíso) + duna / Pedra Furada", "2 noites Jeri"],
-        ["12/08", "qua", "Folga leve OU transfer tarde → Fortaleza", "Jeri ou FOR"],
-        ["13/08", "qui", "Privativo madrugada (se Jeri) → FOR → voo 12:50", "POA"],
+        [
+          "03/08",
+          "seg",
+          "POA 04:45 → SLZ 10:45 (LATAM) · van → Barreirinhas (~4h)",
+          "Barreirinhas",
+        ],
+        [
+          "04/08",
+          "ter",
+          "DIA 0+1: lancha Rio Preguiças → Atins · início travessia → Baixa Grande",
+          "Baixa Grande",
+        ],
+        ["05/08", "qua", "Travessia: Baixa Grande → Queimada dos Britos", "Queimada"],
+        ["06/08", "qui", "Travessia: Queimada → Betânia (dia longo)", "Betânia"],
+        [
+          "07/08",
+          "sex",
+          "Travessia: Betânia → Santo Amaro · fim do trek",
+          "Santo Amaro",
+        ],
+        [
+          "08/08",
+          "sáb",
+          "Transfer Santo Amaro/Barreirinhas → Jericoacoara (7–9h)",
+          "Jeri (noite)",
+        ],
+        ["09/08", "dom", "Descanso: duna do pôr do sol + vila", "Jeri"],
+        ["10/08", "seg", "Lado Leste — Lagoa do Paraíso / Azul", "Jeri"],
+        ["11/08", "ter", "Pedra Furada (maré baixa) ou Lado Oeste", "Jeri"],
+        [
+          "12/08",
+          "qua",
+          "Manhã livre em Jeri · transfer tarde → Fortaleza",
+          "Fortaleza",
+        ],
+        [
+          "13/08",
+          "qui",
+          "FOR 12:50 → POA 18:50 (Azul) · check-in cedo no aeroporto",
+          "POA",
+        ],
       ],
     },
-    12: {
-      title: "12 dias · 02–13/08/2026 · recomendado",
+    jeri_curta: {
+      title: "Jeri curta · 03–13/08 · mais folga pós-trek",
       rows: [
-        ["02/08", "dom", "POA → SLZ → van Barreirinhas", "Noite Barreirinhas"],
-        ["03/08", "seg", "Buffer: Rio Preguiças / organizar mochila / ATM", "Barreirinhas"],
-        ["04–07/08", "4d", "Travessia 4 dias (1ª quinzena = lagoas melhores)", "Oásis"],
-        ["08/08", "sáb", "Transfer → Jeri (Rota das Emoções)", "Chegada cansada"],
-        ["09/08", "dom", "Descanso: duna pôr do sol + vila", "Jeri"],
-        ["10/08", "seg", "Buggy/jardineira Leste (Paraíso / Azul)", "Jeri"],
-        ["11/08", "ter", "Oeste (Tatajuba) OU Pedra Furada + Preá", "Jeri"],
-        ["12/08", "qua", "Última manhã Jeri → transfer tarde FOR", "Noite Fortaleza"],
-        ["13/08", "qui", "Aeroporto FOR · check-in · voo 12:50", "POA 18:50"],
+        [
+          "03/08",
+          "seg",
+          "POA 04:45 → SLZ 10:45 · van Barreirinhas",
+          "Barreirinhas",
+        ],
+        [
+          "04/08",
+          "ter",
+          "Buffer: ATM, mochila, Rio Preguiças / alinhar com guia",
+          "Barreirinhas",
+        ],
+        [
+          "05–08/08",
+          "4d",
+          "Travessia Atins → Santo Amaro (4 dias / 3 noites)",
+          "Oásis",
+        ],
+        ["09/08", "dom", "Transfer → Jeri (dia inteiro)", "Jeri"],
+        ["10/08", "seg", "Descanso + duna", "Jeri"],
+        ["11/08", "ter", "Leste (Paraíso) — único buggy/jardineira", "Jeri"],
+        [
+          "12/08",
+          "qua",
+          "Pedra Furada / folga · transfer tarde → Fortaleza",
+          "Fortaleza",
+        ],
+        ["13/08", "qui", "FOR 12:50 → POA 18:50", "POA"],
       ],
     },
-    14: {
-      title: "14 dias · 31/07–13/08/2026 · completo + Delta",
+    delta: {
+      title: "Com Delta · 03–13/08 · apertado (corta Jeri)",
       rows: [
-        ["31/07", "sex", "POA → SLZ · noite SLZ ou Barreirinhas", "Base MA"],
-        ["01/08", "sáb", "Barreirinhas / preparo / ATM cash", "Barreirinhas"],
-        ["02–05/08", "4d", "Travessia (melhor nível de lagoas)", "Oásis"],
-        ["06/08", "qui", "Santo Amaro → Parnaíba / Delta", "Parnaíba"],
-        ["07/08", "sex", "Delta / revoada guarás · transfer → Jeri", "Jeri"],
-        ["08–11/08", "4d", "Jeri cheia: Leste + Oeste + folga + forró", "Jeri"],
-        ["12/08", "qua", "Saída Jeri → Fortaleza", "Noite FOR"],
-        ["13/08", "qui", "Voo FOR→POA 12:50", "POA"],
+        [
+          "03/08",
+          "seg",
+          "POA 04:45 → SLZ 10:45 · van Barreirinhas",
+          "Barreirinhas",
+        ],
+        [
+          "04–07/08",
+          "4d",
+          "Travessia Atins → Santo Amaro",
+          "Oásis",
+        ],
+        [
+          "08/08",
+          "sáb",
+          "Santo Amaro → Parnaíba / Delta do Parnaíba",
+          "Parnaíba",
+        ],
+        [
+          "09/08",
+          "dom",
+          "Delta / revoada · transfer → Jeri",
+          "Jeri",
+        ],
+        ["10/08", "seg", "Descanso + duna", "Jeri"],
+        ["11/08", "ter", "Leste (Paraíso)", "Jeri"],
+        [
+          "12/08",
+          "qua",
+          "Saída Jeri → Fortaleza (não deixar para o dia 13)",
+          "Fortaleza",
+        ],
+        ["13/08", "qui", "FOR 12:50 → POA 18:50", "POA"],
       ],
     },
   };
@@ -93,7 +195,6 @@
 
   const SEG_COLORS = {
     trek: "#0a5554",
-    outbound: "#0e8a86",
     transfers: "#3ecfc4",
     hotels: "#b8956a",
     food: "#d9c4a0",
@@ -104,13 +205,13 @@
   const DEFAULT_CHECKS = {
     chkTrek: false,
     chkPerguntas: false,
-    chkOutbound: false,
     chkTransferJeri: false,
     chkHotelJeri: false,
     chkFor13: false,
     chkTpa: false,
     chkSeguro: false,
     chkCash: false,
+    chkFlights: true,
   };
 
   function money(n) {
@@ -129,7 +230,6 @@
     const food = s.food + (jeriNights === 0 ? -200 : jeriNights === 4 ? 120 : 0);
     const items = {
       trek,
-      outbound: s.outbound,
       transfers,
       hotels,
       food,
@@ -157,7 +257,7 @@
   const saved = loadState();
   const state = {
     scenario: saved?.scenario || "equilibrado",
-    tripDays: String(saved?.tripDays || "12"),
+    plan: saved?.plan || "base",
     jeriNights: String(saved?.jeriNights ?? "3"),
     trekMode: saved?.trekMode || "cotacao",
     tab: saved?.tab || "visao",
@@ -167,7 +267,7 @@
 
   const els = {
     scenario: document.getElementById("scenario"),
-    tripDays: document.getElementById("tripDays"),
+    plan: document.getElementById("plan"),
     jeriNights: document.getElementById("jeriNights"),
     trekMode: document.getElementById("trekMode"),
     stats: document.getElementById("stats"),
@@ -184,7 +284,7 @@
 
   function syncControls() {
     els.scenario.value = state.scenario;
-    els.tripDays.value = state.tripDays;
+    els.plan.value = state.plan;
     els.jeriNights.value = state.jeriNights;
     els.trekMode.value = state.trekMode;
   }
@@ -217,7 +317,7 @@
     els.stats.innerHTML = `
       <div class="stat stat--${tone}">
         <div class="stat__value">${money(budget.total)}</div>
-        <div class="stat__label">Gasto estimado / pessoa · ${SCENARIO_META[state.scenario].label}</div>
+        <div class="stat__label">Gasto restante / pessoa · ${SCENARIO_META[state.scenario].label}</div>
       </div>
       <div class="stat stat--${tone}">
         <div class="stat__value">${money(Math.abs(budget.remaining))}</div>
@@ -228,8 +328,8 @@
         <div class="stat__label">Travessia no cenário</div>
       </div>
       <div class="stat stat--info">
-        <div class="stat__value">${state.jeriNights} noites</div>
-        <div class="stat__label">Jeri · calendário ${state.tripDays}d</div>
+        <div class="stat__value">03→13/08</div>
+        <div class="stat__label">Janela fixa · ${state.jeriNights} noites Jeri</div>
       </div>
     `;
   }
@@ -238,7 +338,6 @@
     const pct = Math.min(100, Math.round((budget.total / CAP) * 100));
     const segs = [
       ["trek", "Travessia"],
-      ["outbound", "Voo ida"],
       ["transfers", "Transfers"],
       ["hotels", "Hotéis"],
       ["food", "Comida"],
@@ -259,13 +358,13 @@
       .join("");
     els.usage.innerHTML = `
       <div class="usage__head">
-        <span>${pct}% do teto R$ 6.000</span>
+        <span>${pct}% do teto R$ 6.000 (sem aviões)</span>
         <span>${money(budget.total)} / ${money(CAP)}</span>
       </div>
       <div class="usage__track">${bars}</div>
       <div class="usage__legend">${legend}</div>
       <p class="muted" style="margin:0.75rem 0 0">
-        Volta FOR–POA (${money(RETURN_PAID)}) já paga e fora do teto. Valores aproximados mercado jul/2026.
+        Ida LATAM (~${money(OUTBOUND_PAID)}/pess.) e volta Azul (~${money(RETURN_PAID)}/pess.) já pagas — fora do teto.
       </p>
     `;
   }
@@ -287,7 +386,7 @@
         return `
           <div class="chart-bars__row">
             <div>${label}</div>
-            <div class="chart-bars__track chart-bars__cap" style="--cap:100%">
+            <div class="chart-bars__track chart-bars__cap">
               <div class="chart-bars__fill" style="width:${w}%"></div>
             </div>
             <div class="num">${money(totals[i])}</div>
@@ -297,65 +396,90 @@
 
     return `
       <section class="section is-active" data-section="visao">
-        <h2>Mapa da decisão</h2>
-        <p class="lede">Tudo gira em torno da volta em 13/08 e do teto de ${money(CAP)}/pessoa (avião pago fora).</p>
-        <div class="grid-2">
+        <h2>Âncoras fixas — não mudar</h2>
+        <p class="lede">Toda a logística e a travessia encaixam entre estes dois voos já comprados.</p>
+        ${table(
+          ["Trecho", "Data", "Horários", "Cia", "Status"],
+          [
+            [
+              "Ida POA → SLZ",
+              "03/08 (seg)",
+              "04:45 → 10:45",
+              "LATAM",
+              "Pago · fixo",
+            ],
+            [
+              "Volta FOR → POA",
+              "13/08 (qui)",
+              "12:50 → 18:50",
+              "Azul",
+              "Pago · fixo",
+            ],
+          ],
+          { tones: ["ok", "ok"] }
+        )}
+        <p class="muted">Códigos de reserva, documentos e cartão ficam só no e-mail/app — não nesta página.</p>
+
+        <div class="grid-2" style="margin-top:1rem">
           <div class="block">
             <div class="block__title">Já fechado <span class="tag tag--ok">âncora</span></div>
-            <p>Volta Fortaleza → Porto Alegre · qui 13/08 · 12:50–18:50 · Azul · 1 parada.</p>
-            <p class="muted">Volta Azul já comprada · 1 parada · econômica · sem bagagem despachada (detalhes da reserva ficam só no e-mail/app).</p>
-            <p>Cotação travessia 4 dias: <b>${money(TREK_QUOTE)}/pessoa</b> (casal = ${money(TREK_QUOTE * 2)}).</p>
+            <ul>
+              <li>Ida LATAM 03/08 · chega SLZ 10:45 (conexão GRU)</li>
+              <li>Volta Azul 13/08 · sai FOR 12:50</li>
+              <li>Cotação travessia ${money(TREK_QUOTE)}/pessoa</li>
+            </ul>
           </div>
           <div class="block">
             <div class="block__title">Próximas travas <span class="tag tag--warn">urgente</span></div>
             <ol>
-              <li>Confirmar inclusões da cotação R$ 2.100</li>
-              <li>Comprar POA → SLZ alinhado ao calendário ${state.tripDays}d</li>
-              <li>Reservar transfer Lençóis → Jeri</li>
-              <li>Travar Jeri→FOR do dia 13 (privativo ou noite em FOR)</li>
+              <li>Confirmar datas da travessia com o guia (início 04/08)</li>
+              <li>Van SLZ→Barreirinhas no dia 03 (após 10:45)</li>
+              <li>Transfer pós-trek → Jeri (08/08 no roteiro base)</li>
+              <li>Noite em Fortaleza 12/08 OU privativo madrugada 13/08</li>
             </ol>
           </div>
         </div>
-        <h3>Matriz Jeri vs teto</h3>
+
+        <h3>Matriz Jeri vs teto (dentro de 03–13/08)</h3>
         ${table(
           ["Opção", "Noites", "Fit no teto", "Experiência"],
           [
-            ["Pular Jeri", "0", "Folgado", "Foco total Lençóis"],
+            ["Pular Jeri", "0", "Folgado", "Só Lençóis + saída FOR"],
             ["Jeri curta", "2", "Seguro no Enxuto", "Duna + 1 lado lagoas"],
-            ["Jeri equilíbrio", "3", "Melhor fit Equilibrado", "Descanso + Leste + folga"],
-            ["Jeri cheia", "4+", "Só se ida ≤ ~R$ 1.100", "Leste + Oeste + gastronomia"],
+            ["Jeri equilíbrio", "3", "Melhor fit Equilibrado", "Roteiro base"],
+            ["Jeri cheia", "4", "Apertado", "Só se cortar extras"],
           ],
           { tones: ["", "info", "ok", "warn"] }
         )}
-        <h3>Comparativo de cenários (R$/pessoa)</h3>
+        <h3>Comparativo de cenários (resto da viagem / pessoa)</h3>
         <div class="chart-bars">${bars}</div>
-        <p class="muted">Linha de referência visual = teto R$ 6.000. Cenário atual: ${money(budget.total)}.</p>
+        <p class="muted">Aviões já pagos fora da conta. Cenário atual: ${money(budget.total)} de ${money(CAP)}.</p>
         <div class="alert alert--info">
           <strong>Veredito</strong>
-          Com a cotação de R$ 2.100, o perfil Equilibrado + 2–3 noites em Jeri é o caminho mais realista. A cotação está na faixa média-baixa do mercado — confirme se transfers SLZ estão inclusos.
+          Com ida e volta fixas, o perfil Equilibrado + roteiro base (3 noites Jeri + noite FOR em 12/08) é o mais seguro. Chegada em SLZ às 10:45 no dia 03 permite van no mesmo dia para Barreirinhas.
         </div>
       </section>`;
   }
 
   function sectionCalendario() {
-    const cal = CALENDARS[state.tripDays];
+    const cal = CALENDARS[state.plan] || CALENDARS.base;
     return `
       <section class="section is-active" data-section="calendario">
         <h2>${cal.title}</h2>
-        <p class="lede">Calendário contado de trás a partir da volta em Fortaleza.</p>
+        <p class="lede">Janela travada: chega 03/08 10:45 em SLZ · sai 13/08 12:50 de FOR. Troque só a variante do plano nos controles.</p>
         ${table(["Data", "Dia", "Plano", "Pernoite"], cal.rows)}
         <div class="grid-3">
           <div class="block">
-            <div class="block__title">Por que 12 dias</div>
-            <p>Buffer em Barreirinhas + travessia na 1ª quinzena + dia de descanso em Jeri + noite em Fortaleza no dia 12.</p>
+            <div class="block__title">Roteiro base</div>
+            <p>Trek 04–07 · Jeri 08–11 · FOR 12 · voo 13. Melhor equilíbrio descanso + lagoas.</p>
           </div>
           <div class="block">
-            <div class="block__title">Risco do 10 dias</div>
-            <p>Chegada cansada em Jeri; só 2 noites úteis; sem margem se o trek atrasar.</p>
+            <div class="block__title">Jeri curta</div>
+            <p>1 dia buffer em Barreirinhas (04/08) · trek 05–08 · Jeri mais curta. Menos pressa no início.</p>
           </div>
           <div class="block">
-            <div class="block__title">14 dias + Delta</div>
-            <p>Parnaíba / guarás. Charmoso, mas come ~R$ 300–600 extras — melhor no Enxuto ou sem buggy privativo.</p>
+            <div class="block__title">+ Delta</div>
+            <p>Inclui Parnaíba — corta noites em Jeri. Só se o Delta for prioridade.</p>
           </div>
         </div>
       </section>`;
@@ -364,125 +488,92 @@
   function sectionTravessia() {
     return `
       <section class="section is-active" data-section="travessia">
-        <h2>Travessia 4 dias</h2>
-        <p class="lede">Sentido clássico Atins → Santo Amaro (a favor do vento). ~40–50 km · nível moderado · saídas 2h–5h · redário nos oásis.</p>
-        <h3>Itinerário típico</h3>
+        <h2>Travessia 4 dias (encaixe 04–07/08)</h2>
+        <p class="lede">Pacote tipo Walter: Atins → Santo Amaro. Precisa começar logo após a chegada do dia 03 — alinhar datas com o guia agora.</p>
+        <h3>Dia a dia (referência do guia)</h3>
         ${table(
-          ["Dia", "Rota", "km a pé", "Pernoite"],
+          ["Dia", "Rota", "km / ritmo", "Pernoite"],
           [
-            ["1", "Barreirinhas → lancha → Atins → 4×4 → Baixa Grande", "8–10", "Baixa Grande"],
-            ["2", "Baixa Grande → Queimada dos Britos", "8–12", "Queimada"],
-            ["3", "Queimada → Betânia (dia longo)", "14–18", "Betânia"],
-            ["4", "Betânia → Santo Amaro (a pé ou caiaque) → transfer", "0–12", "SLZ / Jeri / SA"],
+            ["0+1 · 04/08", "Barreirinhas → lancha → Atins → Baixa Grande", "lancha + ~13 km", "Baixa Grande"],
+            ["2 · 05/08", "Baixa Grande → Queimada dos Britos", "~10 km", "Queimada"],
+            ["3 · 06/08", "Queimada → Betânia", "~17 km (longo)", "Betânia"],
+            ["4 · 07/08", "Betânia → Santo Amaro", "~10 km", "Santo Amaro"],
           ]
         )}
-        <h3>Operadoras e preços (jul/2026)</h3>
-        ${table(
-          ["Operador", "Preço/pess.", "Destaque", "Status"],
-          [
-            ["Cotação de vocês", money(TREK_QUOTE), "Comparar inclusões por escrito", "Privada"],
-            ["Mangue Brasil", "R$ 1.580 PIX", "Grupo mín. 10 · saída 27–30/08", "Site"],
-            ["Borandá Trekking", "R$ 3.220–4.420", "Hostel + transfers + seguro", "Site"],
-            ["Lençóis Trekking", "R$ 3.700 PIX", "Transfer SLZ · caiaque dia 4", "Site"],
-            ["Trilha Tour", "a partir R$ 3.950", "Pacote oásis completo", "Site"],
-            ["PlanetaEXO", "~USD 600", "Parceiro local", "Site"],
-            ["TDB Turismo", "R$ 4.865", "Pacote 11–16/08/2026", "Site"],
-          ],
-          { tones: ["ok", "info", "", "", "", "", "warn"], aligns: ["left", "right", "left", "left"] }
-        )}
         <div class="alert alert--warn">
-          <strong>Perguntas ao guia dos R$ 2.100</strong>
-          Transfer SLZ↔base incluso? Lancha + 4×4? Refeições/água? Grupo mínimo (saída a 2)? Condutor ICMBio? Seguro? Mala grande? Datas compatíveis com 13/08? Sinal e cancelamento?
+          <strong>Perguntas ao guia (R$ 2.100)</strong>
+          Consegue iniciar 04/08 de manhã (vocês chegam SLZ 03/08 10:45)? Transfer Santo Amaro incluso no dia 07 ou 08? Lancha + 4×4? Refeições/água? Grupo mínimo? Condutor ICMBio? Onde deixa mala grande?
         </div>
         <div class="grid-2">
           <div class="block">
             <div class="block__title">Geralmente incluso</div>
             <ul>
               <li>Guia local credenciado</li>
-              <li>3 noites redário</li>
-              <li>Café / almoço / jantar nos oásis</li>
-              <li>Lancha e/ou 4×4 internos</li>
-              <li>Às vezes van SLZ (só pacotes “completos”)</li>
+              <li>3 noites redário + refeições nos oásis</li>
+              <li>4×4 internos da trilha</li>
             </ul>
           </div>
           <div class="block">
-            <div class="block__title">Geralmente fora</div>
+            <div class="block__title">Fora do pacote (confirmar)</div>
             <ul>
-              <li>Passagens e hotéis fora da trilha</li>
-              <li>Água / bebidas nos oásis</li>
-              <li>Almoço dia 1 no porto / Caburé</li>
-              <li>Gorjetas · evacuação</li>
-              <li>ICMBio: sem taxa de entrada</li>
+              <li>Van SLZ ↔ Barreirinhas / Santo Amaro</li>
+              <li>Lancha Barreirinhas → Atins (DIA 0)</li>
+              <li>Água engarrafada / bebidas</li>
             </ul>
           </div>
         </div>
-        <h3>Alternativas</h3>
-        ${table(
-          ["Opção", "Perfil", "Preço aprox."],
-          [
-            ["Travessia 3d/2n", "Mais intensa", "R$ 1.900–3.570"],
-            ["Jeep Azul + Bonita", "Leve, 1 dia", "R$ 109–280/pess."],
-            ["Bate-volta Santo Amaro", "Lagoas Gaivota/Peixe/Junco", "~R$ 230/pess."],
-            ["Circuito bases sem trek", "Conforto", "R$ 1.700–2.000+"],
-          ]
-        )}
       </section>`;
   }
 
   function sectionLogistica() {
     return `
       <section class="section is-active" data-section="logistica">
-        <h2>Logística ponta a ponta</h2>
-        <h3>1. Voo POA → SLZ</h3>
+        <h2>Logística — horários fixos</h2>
+        <h3>1. Ida (já comprada)</h3>
         ${table(
           ["Item", "Detalhe"],
           [
-            ["Companhias", "Azul, GOL, LATAM — quase sempre 1 conexão"],
-            ["Duração", "Melhor ~5h40–7h · comuns 8–15h"],
-            ["Preço só ida ago/2026", "Ofertas ~R$ 470–800 · Azul típico ~R$ 1.035 · picos R$ 1.400+"],
-            ["Meta no cenário", money(SCENARIO_META[state.scenario].outbound)],
-            ["Dica horário", "Chegar SLZ até meio-dia → van no mesmo dia (~4h)"],
+            ["Data", "segunda 03/08/2026"],
+            ["Partida", "POA 04:45"],
+            ["Chegada", "SLZ 10:45"],
+            ["Cia", "LATAM · 1 conexão Guarulhos"],
+            ["Tarifa", "Economy Light · já paga"],
+            ["Próximo passo", "Van compartilhada SLZ → Barreirinhas (~4h) no mesmo dia"],
           ]
         )}
-        <h3>2. São Luís ↔ Barreirinhas</h3>
+        <h3>2. São Luís → Barreirinhas (03/08)</h3>
         ${table(
           ["Modal", "Duração", "Preço/pess.", "Notas"],
           [
-            ["Ônibus", "4h30–5h", "R$ 70–75", "Buson"],
-            ["Van compartilhada", "3h30–4h30", "R$ 100–160", "Aeroporto/centro"],
-            ["Privativo", "~4h", "sob consulta", "Flexível p/ voos"],
-            ["Santo Amaro → SLZ", "4–5h", "muitas vezes no pacote", "Confirmar guia"],
+            ["Van compartilhada", "3h30–4h30", "R$ 100–160", "Embarque aeroporto após 10:45"],
+            ["Ônibus", "4h30–5h", "R$ 70–75", "Checar horário compatível"],
+            ["Privativo", "~4h", "mais caro", "Só se perder a van"],
           ],
           { aligns: ["left", "left", "right", "left"] }
         )}
         <h3>3. Lençóis → Jericoacoara</h3>
         ${table(
-          ["Opção", "Duração", "Preço", "Quando usar"],
+          ["Opção", "Duração", "Preço", "Encaixe"],
           [
-            ["Van compartilhada asfalto", "7–9h", "R$ 460–650", "Padrão custo-benefício"],
-            ["Privativo 4×4", "7–9h", "R$ 1.650–2.000/carro", "Casal divide ~R$ 825–1.000"],
-            ["Santo Amaro → Jeri", "~9h", "~R$ 750", "Se trek termina em SA"],
-            ["Via praia (privativo)", "7–11h", "mais caro", "Cenário / foto"],
-            ["Via Delta", "+1–2 dias", "+R$ 160–170/trecho", "Calendário 14 dias"],
-            ["Azul Conecta (Cessna)", "aéreo", "a partir ~R$ 800", "Malha irregular"],
-            ["Ônibus Guanabara", "longo", "R$ 100–120", "Só alguns dias"],
+            ["Van compartilhada", "7–9h", "R$ 460–650", "Roteiro base: 08/08"],
+            ["Santo Amaro → Jeri", "~9h", "~R$ 750", "Se terminarem o trek em SA"],
+            ["Via Delta", "+1–2 dias", "+R$ 160–170/trecho", "Variante Delta"],
           ],
-          { tones: ["ok", "info", "info", "", "", "warn", ""], aligns: ["left", "left", "right", "left"] }
+          { tones: ["ok", "info", "warn"], aligns: ["left", "left", "right", "left"] }
         )}
-        <h3>4. Jeri → Aeroporto FOR (13/08)</h3>
+        <h3>4. Volta (já comprada) — crítico</h3>
         ${table(
-          ["Opção", "Saída", "Chegada FOR", "Serve 12:50?", "Preço"],
+          ["Opção", "Saída Jeri", "Chegada FOR", "Serve 12:50?", "Preço"],
           [
-            ["Compartilhado regular", "~10:30–11:00", "~18:00", "Não", "R$ 100–300"],
-            ["Privativo 4×4", "~4h–5h30", "4,5–6h depois", "Sim", "R$ 700–900/carro"],
-            ["Pernoite Fortaleza 12/08", "dia 12", "tarde/noite 12", "Sim (mais seguro)", "+ hotel R$ 150–300"],
-            ["Ônibus Guanabara", "manhã/tarde", "7h+", "Não", "R$ 80–175"],
+            ["Compartilhado regular", "~10:30", "~18:00", "Não", "R$ 100–300"],
+            ["Privativo 4×4", "~4h–5h30 dia 13", "4,5–6h depois", "Sim", "R$ 700–900/carro"],
+            ["Pernoite Fortaleza 12/08", "tarde do dia 12", "noite 12", "Sim (recomendado)", "+ hotel"],
           ],
-          { tones: ["alert", "ok", "ok", "alert"] }
+          { tones: ["alert", "ok", "ok"] }
         )}
         <div class="alert alert--danger">
-          <strong>Decisão obrigatória</strong>
-          Escolham agora: (A) privativo de madrugada no dia 13, ou (B) última noite em Fortaleza. Não deixem para a semana da viagem.
+          <strong>13/08 12:50 é inalterável</strong>
+          Não contem com van compartilhada no dia do voo. Travar agora: noite em Fortaleza em 12/08 (preferível) ou privativo de madrugada.
         </div>
       </section>`;
   }
@@ -490,74 +581,39 @@
   function sectionJeri() {
     return `
       <section class="section is-active" data-section="jeri">
-        <h2>Jericoacoara e o circuito das lagoas</h2>
+        <h2>Jericoacoara (após o trek)</h2>
         <div class="alert alert--info">
-          <strong>Nome correto</strong>
-          A Rota Romântica oficial é do RS. Em Jeri peçam “Lado Leste / Lagoa do Paraíso” — ou a Rota das Emoções (Lençóis → Delta → Jeri).
+          <strong>“Rota Romântica”</strong>
+          Peçam Lado Leste / Lagoa do Paraíso. A Rota Romântica oficial é do RS; aqui o circuito é lagoas + Rota das Emoções.
         </div>
-        <h3>Passeios — preços para 2</h3>
         ${table(
           ["Passeio", "Conteúdo", "Compartilhado", "Buggy privativo"],
           [
             ["Litoral Leste", "Paraíso, Azul, Buraco Azul, Preá", "R$ 140–240 casal", "R$ 360–600/buggy"],
-            ["Litoral Oeste", "Guriú, Mangue Seco, Tatajuba", "R$ 140–260 casal", "R$ 380–550/buggy"],
-            ["Barrinha", "Preá, Barrinha, dunas", "~R$ 150 casal", "R$ 370–500/buggy"],
+            ["Litoral Oeste", "Guriú, Tatajuba, Mangue Seco", "R$ 140–260 casal", "R$ 380–550/buggy"],
             ["Pedra Furada", "A pé na maré baixa", "Grátis", "opcional"],
             ["Duna do Pôr do Sol", "Ritual diário", "Grátis", "—"],
           ],
           { aligns: ["left", "left", "right", "right"] }
         )}
-        <p class="muted">TTS 2026: R$ 41,50/pessoa — só no canal oficial ADEJERI. Extras: cavalo-marinho ~R$ 20 · tirolesa ~R$ 10–20 · almoço lagoa R$ 40–80.</p>
-        <h3>Hospedagem (duplo / noite, agosto)</h3>
-        ${table(
-          ["Faixa", "Diária", "Perfil"],
-          [
-            ["Econômica", "R$ 150–350", "Hostel / pousada simples"],
-            ["Média", "R$ 300–700", "Pousada do Maurício, Casa do Angelo…"],
-            ["Boutique", "R$ 500–1.200+", "Villa Mango e similares"],
-            ["Preá / kite", "R$ 1.000–2.500+", "Rancho do Peixe"],
-          ],
-          { aligns: ["left", "right", "left"] }
-        )}
-        <h3>Roteiro Jeri sugerido (3 noites)</h3>
+        <p class="muted">TTS 2026: R$ 41,50/pessoa — canal oficial ADEJERI. 1º dia em Jeri = só descanso (vocês chegam de transfer longo).</p>
+        <h3>No roteiro base (chegada 08/08)</h3>
         ${table(
           ["Dia", "Plano"],
           [
-            ["Chegada", "Só descanso + pôr do sol na duna + jantar leve"],
-            ["Dia 2", "Leste compartilhado — prioridade Lagoa do Paraíso"],
-            ["Dia 3", "Pedra Furada (maré baixa) + vila OU Oeste"],
-            ["Saída", "Manhã livre · transfer FOR (ideal tarde do dia anterior)"],
+            ["08/08", "Chegada à noite — sem passeio"],
+            ["09/08", "Descanso + duna"],
+            ["10/08", "Leste (Paraíso)"],
+            ["11/08", "Pedra Furada ou Oeste"],
+            ["12/08", "Manhã livre · sair à tarde para FOR"],
           ]
         )}
-        <div class="grid-2">
-          <div class="block">
-            <div class="block__title">Comida (casal / dia)</div>
-            <ul>
-              <li>Econômico: R$ 160–240</li>
-              <li>Confortável: R$ 240–400</li>
-              <li>Gourmet/beach club: R$ 400–700+</li>
-            </ul>
-          </div>
-          <div class="block">
-            <div class="block__title">Side trips</div>
-            <ul>
-              <li>Preá: kite + vila mais quieta</li>
-              <li>Tatajuba: já no Lado Oeste</li>
-              <li>Camocim / Ilha do Amor: transfer praia ~R$ 1.260/carro</li>
-            </ul>
-          </div>
-        </div>
-        <div class="alert alert--warn">
-          <strong>Pós-travessia</strong>
-          O primeiro dia em Jeri deve ser leve. Vocês chegam de 7–9h de estrada depois de 4 dias andando na areia.
-        </div>
       </section>`;
   }
 
   function sectionOrcamento(budget) {
     const rows = [
       ["Travessia", budget.items.trek],
-      ["Voo POA→SLZ", budget.items.outbound],
       ["Transfers", budget.items.transfers],
       ["Hotéis fora da trilha", budget.items.hotels],
       ["Comida (fora da trilha)", budget.items.food],
@@ -569,14 +625,13 @@
       money(value),
       `${Math.round((value / CAP) * 100)}%`,
     ]);
-    tableRows.push(["TOTAL", money(budget.total), `${Math.round((budget.total / CAP) * 100)}%`]);
+    tableRows.push(["TOTAL restante", money(budget.total), `${Math.round((budget.total / CAP) * 100)}%`]);
 
     let acc = 0;
     const pieParts = rows.map(([label, value], i) => {
-      const start = acc;
       const pct = (value / budget.total) * 100;
       acc += pct;
-      return { label, value, start, pct, color: Object.values(SEG_COLORS)[i] };
+      return { label, value, pct, color: Object.values(SEG_COLORS)[i] };
     });
     const gradient = pieParts
       .map((p, i) => {
@@ -588,39 +643,30 @@
 
     return `
       <section class="section is-active" data-section="orcamento">
-        <h2>Orçamento vivo — ${SCENARIO_META[state.scenario].label}</h2>
-        <p class="lede">Por pessoa · teto ${money(CAP)} · volta já paga fora · Jeri ${state.jeriNights} noites · trek ${state.trekMode}</p>
+        <h2>Orçamento — ${SCENARIO_META[state.scenario].label}</h2>
+        <p class="lede">Teto ${money(CAP)}/pessoa para o que ainda falta. Ida e volta aéreas já pagas (fora do teto).</p>
+        ${table(
+          ["Já pago (fora do teto)", "≈ / pessoa"],
+          [
+            ["Ida LATAM POA→SLZ", money(OUTBOUND_PAID)],
+            ["Volta Azul FOR→POA", money(RETURN_PAID)],
+          ],
+          { aligns: ["left", "right"] }
+        )}
         <div class="grid-2">
           <div>
-            ${table(["Item", "R$/pessoa", "% do teto"], tableRows, {
+            ${table(["Ainda gastar", "R$/pessoa", "% do teto"], tableRows, {
               aligns: ["left", "right", "right"],
               tones: Array(rows.length).fill("").concat([budget.remaining < 0 ? "alert" : "ok"]),
             })}
-            <p class="muted">Casal (×2, hotéis já rateados): ~${money(budget.total * 2)}. Folga individual: ${money(budget.remaining)}.</p>
+            <p class="muted">Casal (×2): ~${money(budget.total * 2)} restantes. Folga: ${money(budget.remaining)}/pess.</p>
           </div>
           <div class="block">
-            <div class="block__title">Composição do gasto</div>
+            <div class="block__title">Composição do restante</div>
             <div class="pie-wrap">
               <div class="pie" style="background:conic-gradient(${gradient})" data-center="${money(budget.total)}"></div>
             </div>
-            <div class="block__title">Onde a maioria estoura</div>
-            <ol>
-              <li>Voo de ida com bagagem</li>
-              <li>Buggy privativo + beach clubs</li>
-              <li>Transfer Lençóis→Jeri + noite extra</li>
-              <li>Cash-back caro em Jeri (10–15%)</li>
-              <li>Noites ponte por conexão ruim</li>
-            </ol>
           </div>
-        </div>
-        <h3>Economias que não estragam</h3>
-        <div class="tip-grid">
-          <div>Fechar ida POA–SLZ agora</div>
-          <div>1 buggy compartilhado + duna grátis</div>
-          <div>PF no almoço; 1–2 jantares bons</div>
-          <div>Van compartilhada; privativo só no dia 13</div>
-          <div>Não repetir jeep Azul+Bonita após o trek</div>
-          <div>Sacar em SLZ/Barreirinhas antes de Atins/Jeri</div>
         </div>
       </section>`;
   }
@@ -628,29 +674,17 @@
   function sectionPrazos() {
     return `
       <section class="section is-active" data-section="prazos">
-        <h2>Prazos e ordem de reserva</h2>
-        <p class="lede">Volta em 13/08 · janela curta · alta temporada.</p>
+        <h2>Prazos (voos já ok)</h2>
+        <p class="lede">Ida 03/08 e volta 13/08 estão compradas. O relógio agora é da travessia e dos transfers.</p>
         ${table(
           ["#", "O quê", "Quando", "Por quê"],
           [
-            ["1", "Travessia (datas + depósito 30–50%)", "Imediato", "Oásis lotam em ago"],
-            ["2", "Voo POA→SLZ", "Esta semana", "Maior variável do orçamento"],
-            ["3", "Transfer pós-trek → Jeri", "Com fim da trilha definido", "Frequência limitada"],
-            ["4", "Pousada Jeri", "Já apertado", "Centro some em agosto"],
-            ["5", "Jeri→FOR dia 13 ou hotel FOR 12/08", "2–4 semanas", "Bloqueio do voo 12:50"],
-            ["6", "1 noite Barreirinhas", "Com voo fechado", "Buffer físico"],
-            ["7", "TTS + seguro + chip Vivo + buggy", "1–2 semanas / na chegada", "TTS online ADEJERI"],
-          ]
-        )}
-        <h3>Agosto e lagoas</h3>
-        ${table(
-          ["Fator", "Expectativa"],
-          [
-            ["Chuva", "Baixa — fim da estação chuvosa"],
-            ["Lagoas Lençóis", "Ainda boas; melhor na 1ª quinzena; Santo Amaro segura mais água"],
-            ["Vento", "Forte — chapéu com cordão"],
-            ["Jeri", "Sol + vento + lagoas ok; hotéis caros"],
-            ["Pergunta ao guia", "1–2 semanas antes: nível das lagoas da rota"],
+            ["1", "Confirmar travessia com guia (início 04/08)", "Imediato", "Janela curta até 03/08"],
+            ["2", "Van SLZ→Barreirinhas dia 03 após 10:45", "Esta semana", "Chegada fixa"],
+            ["3", "Transfer pós-trek → Jeri", "Com fim do trek definido", "Frequência limitada"],
+            ["4", "Pousada Jeri + hotel FOR 12/08", "Já apertado", "Alta temporada"],
+            ["5", "Plano Jeri→FOR (noite FOR ou privativo)", "2–4 semanas", "Voo 12:50 inalterável"],
+            ["6", "TTS + seguro + chip + buggy", "1–2 semanas", "TTS online ADEJERI"],
           ]
         )}
       </section>`;
@@ -658,15 +692,15 @@
 
   function sectionChecklist() {
     const items = [
-      ["chkTrek", "Travessia confirmada por escrito (inclusões + datas)"],
-      ["chkPerguntas", "Perguntas da cotação R$ 2.100 respondidas"],
-      ["chkOutbound", "Voo POA→SLZ comprado (horário ok p/ van)"],
+      ["chkFlights", "Ida LATAM 03/08 e volta Azul 13/08 — vouchers salvos no celular"],
+      ["chkTrek", "Travessia confirmada por escrito (início compatível com 04/08)"],
+      ["chkPerguntas", "Inclusões da cotação R$ 2.100 respondidas"],
       ["chkTransferJeri", "Transfer Lençóis→Jeri reservado"],
-      ["chkHotelJeri", "Pousada Jeri (e/ou Fortaleza 12/08)"],
-      ["chkFor13", "Plano Jeri→FOR do dia 13 travado"],
-      ["chkTpa", "TTS Jeri (R$ 41,50) no canal oficial"],
-      ["chkSeguro", "Seguro com cobertura de trekking/aventura"],
-      ["chkCash", "Plano de saque SLZ/Barreirinhas (~R$ 800–1.500 casal)"],
+      ["chkHotelJeri", "Pousada Jeri + hotel Fortaleza 12/08"],
+      ["chkFor13", "Plano FOR do dia 13 travado (não usar van 10h30)"],
+      ["chkTpa", "TTS Jeri no canal oficial"],
+      ["chkSeguro", "Seguro com cobertura de trekking"],
+      ["chkCash", "Saque em SLZ/Barreirinhas (~R$ 800–1.500 casal)"],
     ];
     const checks = items
       .map(([id, label]) => {
@@ -682,28 +716,14 @@
     return `
       <section class="section is-active" data-section="checklist">
         <h2>Checklist operacional</h2>
-        <p class="lede">Marque conforme forem fechando — salva neste navegador.</p>
+        <p class="lede">Salva neste navegador. Não cole códigos de reserva nem documentos nas notas públicas.</p>
         <div class="block">
           <div class="block__title">Reservas</div>
           <div class="check-list">${checks}</div>
         </div>
-        <h3>Kit da travessia</h3>
-        ${table(
-          ["Item", "Nota"],
-          [
-            ["Mochila 25–35 L", "Peso alvo ~4–5 kg"],
-            ["2–3 dry-fit UV + banho ×2", "Meias de trilha / compressão"],
-            ["Chapéu cordinha + óculos + FPS", "Vento forte em ago"],
-            ["Capacidade 2–3 L água", "ICMBio recomenda ≥3 L/dia"],
-            ["Headlamp + power bank + estanque", "Saídas 2h–5h"],
-            ["Tampões + tapa-olho", "Redário coletivo"],
-            ["Espécie + remédios + snacks", "PIX falha nos oásis"],
-            ["Chip Vivo / eSIM", "Melhor sinal Atins/Jeri"],
-          ]
-        )}
-        <h3>Notas do casal</h3>
+        <h3>Notas (só neste aparelho)</h3>
         <div class="block">
-          <textarea class="notes" id="notesField" placeholder="Cole WhatsApps do guia, vouchers e decisões…"></textarea>
+          <textarea class="notes" id="notesField" placeholder="WhatsApp do guia, horários de van… (não cole códigos de reserva nem documentos)"></textarea>
           <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap">
             <button type="button" class="btn btn--soft btn--sm" id="stampNotes">Carimbar data</button>
             <button type="button" class="btn btn--soft btn--sm" id="clearNotes">Limpar notas</button>
@@ -715,66 +735,42 @@
   function sectionDicas() {
     return `
       <section class="section is-active" data-section="dicas">
-        <h2>Dicas de fóruns e operação</h2>
+        <h2>Dicas práticas</h2>
         <div class="grid-2">
           <div class="block">
-            <div class="block__title">Lençóis — o que surpreende</div>
+            <div class="block__title">Dia 03/08 — chegada cedo</div>
             <ul>
-              <li>Acordar 2h–5h é regra</li>
-              <li>No oásis o calor aperta mais que na duna</li>
-              <li>Areia geralmente não queima — meia ou descalço</li>
-              <li>Alta temporada: oásis lotados</li>
-              <li>Sem lagoas (out–abr) a travessia perde o sentido</li>
+              <li>POA 04:45: sair de casa na madrugada</li>
+              <li>SLZ 10:45 → van Barreirinhas no mesmo dia</li>
+              <li>Sacar dinheiro em SLZ ou Barreirinhas</li>
+              <li>Organizar mochila na noite do dia 03</li>
             </ul>
           </div>
           <div class="block">
-            <div class="block__title">Jeri — armadilhas</div>
+            <div class="block__title">Dia 13/08 — saída</div>
             <ul>
-              <li>TTS só no canal oficial ADEJERI</li>
-              <li>Bugueiro credenciado; preço fechado do buggy</li>
-              <li>Carro comum não entra na vila</li>
-              <li>ATM: não na vila — sacar antes</li>
-              <li>Pedra Furada a pé depende de maré baixa</li>
+              <li>Dormir em Fortaleza no dia 12</li>
+              <li>Não usar transfer compartilhado da manhã do 13</li>
+              <li>Check-in Azul com folga</li>
             </ul>
           </div>
         </div>
-        <h3>Dinheiro e conectividade</h3>
+        <h3>Dinheiro e sinal</h3>
         ${table(
-          ["Local", "ATM", "PIX/cartão", "Sinal"],
+          ["Local", "ATM", "PIX", "Sinal"],
           [
             ["São Luís / aeroporto", "Sim", "Sim", "OK"],
-            ["Barreirinhas", "Sim (último confiável)", "Sim", "OK centro"],
-            ["Atins / oásis", "Não", "Falhou se rede cair", "Vivo melhor; dunas zero"],
-            ["Jeri vila", "Não", "Amplo (bugueiros às vezes cash)", "Melhorou; ainda falha"],
-            ["Jijoca", "Sim", "Sim", "Parada no transfer"],
+            ["Barreirinhas", "Sim (último confiável)", "Sim", "OK"],
+            ["Oásis / Atins", "Não", "Instável", "Quase zero nas dunas"],
+            ["Jeri", "Não na vila", "Amplo", "Melhorou"],
           ]
         )}
-        <h3>Fornecedores úteis</h3>
-        ${table(
-          ["Uso", "Nome / link"],
-          [
-            ["Transfers Rota das Emoções", "rotacombo.com"],
-            ["Transfer Barreirinhas↔Jeri", "RTUR · Jeri Tur · Pedra Furada Experience"],
-            ["Van SLZ–Barreirinhas", "transferbarreirinhas.com · Rota Combo"],
-            ["TTS Jeri", "adejeri.jijocadejericoacoara.ce.gov.br"],
-            ["Parque Lençóis", "gov.br/icmbio · PARNA Lençóis"],
-            ["Relatos / custos", "viajenaviagem.com · mochileiros.com"],
-            ["Volta já reservada", "Azul FOR→POA · voucher no e-mail/app"],
-          ]
-        )}
-        <h3>Documentos na mala</h3>
-        <div class="pill-row">
-          <span class="pill">RG/CNH + CPF</span>
-          <span class="pill">Vouchers voo ida+volta</span>
+        <div class="pill-row" style="margin-top:1rem">
+          <span class="pill">RG/CNH</span>
+          <span class="pill">Vouchers ida+volta no offline</span>
           <span class="pill">Confirmação trek</span>
-          <span class="pill">2 cartões + PIX</span>
-          <span class="pill">WhatsApp guia/transfers</span>
-          <span class="pill">Mapas offline</span>
+          <span class="pill">Chip Vivo</span>
         </div>
-        <p class="muted" style="margin-top:1.5rem">
-          Preços de mercado mudam — trate faixas como orientação e reconfirme na reserva.
-          Dados da volta extraídos de fortaleza.txt.
-        </p>
       </section>`;
   }
 
@@ -825,7 +821,7 @@
   }
 
   function renderFooter(budget) {
-    els.footerStatus.textContent = `Cenário ativo: ${SCENARIO_META[state.scenario].label} · ${state.tripDays} dias · Jeri ${state.jeriNights}n · trek ${money(budget.trek)}`;
+    els.footerStatus.textContent = `03–13/08 fixo · ${SCENARIO_META[state.scenario].label} · plano ${state.plan} · Jeri ${state.jeriNights}n · trek ${money(budget.trek)}`;
   }
 
   function render() {
@@ -843,7 +839,7 @@
     persist();
   }
 
-  ["scenario", "tripDays", "jeriNights", "trekMode"].forEach((key) => {
+  ["scenario", "plan", "jeriNights", "trekMode"].forEach((key) => {
     els[key].addEventListener("change", () => {
       state[key] = els[key].value;
       render();
@@ -860,7 +856,7 @@
 
   els.resetBtn.addEventListener("click", () => {
     state.scenario = "equilibrado";
-    state.tripDays = "12";
+    state.plan = "base";
     state.jeriNights = "3";
     state.trekMode = "cotacao";
     state.tab = "visao";

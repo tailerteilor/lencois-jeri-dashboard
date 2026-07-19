@@ -6,7 +6,7 @@
     <title>Lençóis × Jeri — Controle da viagem</title>
     <meta
       name="description"
-      content="Dashboard de controle da viagem: POA → Lençóis Maranhenses → Jericoacoara → Fortaleza."
+      content="Dashboard da viagem 03–13/08: POA → Lençóis → Jericoacoara → Fortaleza → POA. Voos de ida e volta fixos."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,18 +26,18 @@
             <span>× Jeri</span>
           </h1>
           <p class="hero__lead">
-            Controle da viagem — travessia de 4 dias nos Lençóis, Rota das Emoções
-            e volta por Fortaleza em 13/08/2026.
+            Janela travada 03–13/08/2026 — ida LATAM e volta Azul já compradas.
+            Travessia, Jeri e transfers encaixam nesses horários.
           </p>
           <div class="hero__meta">
-            <span class="chip chip--solid">Volta fixa 13/08 · 12:50</span>
-            <span class="chip">Azul · Fortaleza → POA</span>
-            <span class="chip">Teto R$ 6.000 / pessoa</span>
-            <span class="chip">Volta já paga</span>
+            <span class="chip chip--solid">Ida 03/08 · POA 04:45 → SLZ 10:45</span>
+            <span class="chip chip--solid">Volta 13/08 · FOR 12:50 → POA 18:50</span>
+            <span class="chip">Teto R$ 6.000 / pessoa (sem aviões)</span>
+            <span class="chip">Ambos os voos já pagos</span>
           </div>
           <div class="hero__cta">
-            <a class="btn btn--primary" href="#painel">Montar cenário</a>
-            <a class="btn btn--ghost" href="#conteudo">Ver roteiro</a>
+            <a class="btn btn--primary" href="#painel">Ver roteiro</a>
+            <a class="btn btn--ghost" href="#conteudo">Calendário</a>
           </div>
           <div class="route-rail">
             <b>POA</b><span class="dot"></span><b>SLZ</b><span class="dot"></span
@@ -49,10 +49,10 @@
 
       <main class="wrap panel" id="painel">
         <div class="alert alert--warn">
-          <strong>Âncora crítica: voo Fortaleza 12:50</strong>
-          Transfer compartilhado Jeri→FOR sai ~10h30 e chega ~18h — não serve. No dia
-          13: privativo saindo ~4h–5h30, ou (recomendado) pernoitar em Fortaleza em
-          12/08.
+          <strong>Duas âncoras inalteráveis</strong>
+          Chegada São Luís 03/08 às 10:45 · saída Fortaleza 13/08 às 12:50. Van
+          compartilhada Jeri→FOR no dia 13 não serve — durmam em Fortaleza no dia 12
+          ou usem privativo de madrugada.
         </div>
 
         <div class="controls" id="controls">
@@ -65,11 +65,11 @@
             </select>
           </div>
           <div class="field">
-            <label for="tripDays">Duração total</label>
-            <select id="tripDays">
-              <option value="10">10 dias (04–13/08) — apertado</option>
-              <option value="12" selected>12 dias (02–13/08) — recomendado</option>
-              <option value="14">14 dias (31/07–13/08) — + Delta</option>
+            <label for="plan">Plano dentro de 03–13/08</label>
+            <select id="plan">
+              <option value="base" selected>Base — recomendado</option>
+              <option value="jeri_curta">Jeri curta + buffer Barreirinhas</option>
+              <option value="delta">Com Delta (corta Jeri)</option>
             </select>
           </div>
           <div class="field">
